@@ -12,6 +12,18 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
+    const playButton = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Play', 
+    { fill: '#0F0', fontSize: 72});
+    playButton.setInteractive();
+
+
+    playButton.on('pointerdown', () => {
+      this.scene.start('GameScene');
+      console.log('Starting gamescene');
+    });
+
+    /*
+    let furnace = new Furniture(this, {
     const furnace = new Furniture(this, {
       name: 'furnace',
       sizeX: 1,
@@ -72,7 +84,7 @@ export default class MainScene extends Phaser.Scene {
 
       /**
      * Delete all the code below to start a fresh scene
-     */
+     *
     new PhaserLogo(this, this.cameras.main.width / 2, 0)
     this.fpsText = new FpsText(this)
 
@@ -105,9 +117,10 @@ export default class MainScene extends Phaser.Scene {
       .setOrigin(1, 0)
 
     this.add.sprite(0, 0, "wooden_wall");
+    */
   }
 
   update() {
-    this.fpsText.update(this)
+    //this.fpsText.update(this)
   }
 }

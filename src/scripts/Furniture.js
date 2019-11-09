@@ -29,7 +29,7 @@ export default class Furniture {
     }
 
     getInventoryImage () {
-        return `${name}_inventory`
+        return `${this.name}_inventory`
     }
     
     setPhase (phase) {
