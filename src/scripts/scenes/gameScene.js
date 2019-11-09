@@ -8,6 +8,10 @@ const POSGRID_X = 1920 * 0.4;
 const POSGRID_Y = 1080 * 0.4;
 const OFFSETGRID_WIDTH = POSGRID_X - (GRID_WIDTH / 2);
 const OFFSETGRID_HEIGTH = POSGRID_Y - (GRID_HEIGTH / 2);
+const WALL_AREA = {
+    pos: { x: OFFSETGRID_WIDTH, y: OFFSETGRID_HEIGTH },
+    width: GRID_WIDTH, heigth: GRID_HEIGTH
+};
 
 const INV_WIDTH = CELL_SIZE * 4;
 const INV_HEIGHT = CELL_SIZE * 8;
@@ -29,6 +33,7 @@ export default class GameScene extends Phaser.Scene {
     invSprites;
     pickUp;
     pickedSprite;
+    lastPickedMoved;
 
     constructor() {
         super({ key: 'GameScene' });
@@ -38,6 +43,7 @@ export default class GameScene extends Phaser.Scene {
         this.roomSprites = [];
         this.invSprites = [];
         this.pickUp = '';
+        this.lastPickedMoved = {x: -1, y: -1};
     }
 
     addfurniture(furniture) {
@@ -82,16 +88,16 @@ export default class GameScene extends Phaser.Scene {
             furniture.setInteractive();
             furniture.name = item.name;
             furniture.on('pointerdown', () => {
-                if (this.pickUp !== '') { return ;}
+                if (this.pickUp !== '') { return; }
                 this.pickUp = item.name;
                 this.roomSprites = this.roomSprites
                     .filter(f => f.name != item.name);
                 wall.tryToRemoveFurniture(this.furnitureList[this.pickUp]);
                 furniture.destroy();
-                this.pickedSprite = this.add.sprite(OFFSETGRID_WIDTH + (item.pos.x * CELL_SIZE),
-                    OFFSETGRID_HEIGTH + (item.pos.y * CELL_SIZE),
+                this.pickedSprite = this.add.sprite(OFFSETGRID_WIDTH + (item.pos.x * CELL_SIZE) + (CELL_SIZE / 2),
+                    OFFSETGRID_HEIGTH + (item.pos.y * CELL_SIZE) + (CELL_SIZE / 2),
                     this.furnitureList[item.name].getInventoryImage());
-            });
+        });
             this.roomSprites.push(furniture);
 
         });
@@ -120,7 +126,7 @@ export default class GameScene extends Phaser.Scene {
             invElem.name = invPage[i];
             invElem.setInteractive();
             invElem.on('pointerdown', () => {
-                if (this.pickUp !== '') { return ;}
+                if (this.pickUp !== '') { return; }
                 this.pickUp = invElem.name;
                 this.inventory = this.inventory
                     .filter(it => it != invPage[i]);
@@ -141,6 +147,21 @@ export default class GameScene extends Phaser.Scene {
     isInArea(pos, area) {
         return ((pos.x >= area.pos.x && pos.x <= area.pos.x + area.width)
             && (pos.y >= area.pos.y && pos.y <= area.pos.y + area.heigth));
+    }
+
+    /**
+     * 
+     * @param {x, y} pos 
+     */
+    getSnappedPosition(pos, noBottomSnap) {
+        let finalY = 0;
+        if (noBottomSnap) {
+            finalY = Math.trunc((pos.y - OFFSETGRID_HEIGTH) / CELL_SIZE);
+        }
+        return {
+            x: Math.trunc((pos.x - OFFSETGRID_WIDTH) / CELL_SIZE),
+            y: finalY,
+        };
     }
 
     create() {
@@ -169,8 +190,18 @@ export default class GameScene extends Phaser.Scene {
         this.loadWallSprites(this.testWall);
         this.input.on('pointermove', pointer => {
             if (this.pickUp !== '') {
-                this.pickedSprite.x = pointer.x;
-                this.pickedSprite.y = pointer.y;
+                if (this.isInArea(pointer, WALL_AREA)) {
+                    let snappedPos = this.getSnappedPosition(pointer, 
+                        this.furnitureList[this.pickUp].placeableOnWall);
+                    if (snappedPos === this.lastPickedMoved) { return; }
+                    this.pickedSprite.x = (snappedPos.x * CELL_SIZE) + OFFSETGRID_WIDTH + (CELL_SIZE / 2);
+                    this.pickedSprite.y = (snappedPos.y * CELL_SIZE) + OFFSETGRID_HEIGTH + (CELL_SIZE  / 2);
+                    this.lastPickedMoved = snappedPos;
+                } else {
+                    this.pickedSprite.x = pointer.x;
+                    this.pickedSprite.y = pointer.y;
+                }
+                
             }
         });
         this.input.on('pointerup', pointer => {
@@ -179,20 +210,14 @@ export default class GameScene extends Phaser.Scene {
                     x: this.pickedSprite.x,
                     y: this.pickedSprite.y
                 };
-                if (this.isInArea(pos, {
-                    pos: {x: OFFSETGRID_WIDTH, y: OFFSETGRID_HEIGTH},
-                    width: GRID_WIDTH, heigth: GRID_HEIGTH
-                })) {
-                    let localPos = {
-                        x: Math.trunc((pos.x - OFFSETGRID_WIDTH) / CELL_SIZE),
-                        y: Math.trunc((pos.y - OFFSETGRID_HEIGTH) / CELL_SIZE),
-                    };
-                    if (this.testWall.tryToAddFurniture(this.furnitureList[this.pickUp], 
+                if (this.isInArea(pos, WALL_AREA)) {
+                    let localPos = this.getSnappedPosition(pos, this.furnitureList[this.pickUp].placeableOnWall);
+                    if (this.testWall.tryToAddFurniture(this.furnitureList[this.pickUp],
                         localPos.x, localPos.y)) {
-                            this.pickUp = '';
-                            this.pickedSprite.destroy();
-                            this.loadWallSprites(this.testWall);
-                        }
+                        this.pickUp = '';
+                        this.pickedSprite.destroy();
+                        this.loadWallSprites(this.testWall);
+                    }
                 }
                 else {
                     this.inventory.push(this.pickUp);
