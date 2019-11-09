@@ -1,3 +1,5 @@
+import UIConfig from './UIConfig'
+
 export default class Wall {
     /**
      * 
@@ -12,6 +14,7 @@ export default class Wall {
         this.sizeY = sizeY
         this.unusablePositions = unusablePositions
         this.correctFurniturePositions = correctFurniturePositions
+        this.sprites = []
         this.resetTiles()
     }
 
@@ -145,5 +148,31 @@ export default class Wall {
     getMisplacedFurnitures () {
         return Object.keys(this.getPresentFurniturePositions())
         .filter(name => !this.getCorrectFurnitures().includes(name))
+    }
+
+    draw () {
+        this.furnitures.forEach(furniture => {
+            let sprite = this.add.sprite(UIConfig.sceneGrid.tileToPixel(x, y)[0], UIConfig.sceneGrid.tileToPixel(x, y)[1],
+                                         furniture.getCurrentImage())
+            sprite.setDisplayOrigin(0, 0);
+            sprite.setInteractive();
+            sprite.name = furniture.name;
+
+            sprite.on('pointerdown', () => {
+                if (this.pickUp !== '') { return ;}
+                this.pickUp = item.name;
+                this.roomSprites = this.roomSprites
+                    .filter(f => f.name != item.name);
+                wall.tryToRemoveFurniture(this.furnitureList[this.pickUp]);
+                furniture.destroy();
+                this.pickedSprite = this.add.sprite(OFFSETGRID_WIDTH + (item.pos.x * CELL_SIZE),
+                    OFFSETGRID_HEIGTH + (item.pos.y * CELL_SIZE),
+                    this.furnitureList[item.name].getInventoryImage());
+            });
+        })
+    }
+
+    undraw() {
+
     }
 }

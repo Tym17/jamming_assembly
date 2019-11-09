@@ -41,6 +41,10 @@ export default class Player {
         return false
     }
 
+    takeFurniture(furniture) {
+        return this.house.getRoom(this.currentRoom).walls[this.currentWall].tryToRemoveFurniture(furniture)
+    }
+
     rotateRight () {
         this.currentWall = this.house.getRoom(this.currentRoom).nextWall(this.currentWall)
     }

@@ -1,5 +1,7 @@
 import Wall from '../Wall';
 import Furniture from '../Furniture';
+import House from '../House';
+import Player from '../Player';
 
 const CELL_SIZE = 96;
 const GRID_WIDTH = 1248;
@@ -38,6 +40,8 @@ export default class GameScene extends Phaser.Scene {
         this.roomSprites = [];
         this.invSprites = [];
         this.pickUp = '';
+        this.house = new House(this, this.furnitureList)
+        this.player = new Player(this, this.furnitureList, this.house);
     }
 
     addfurniture(furniture) {
@@ -53,15 +57,21 @@ export default class GameScene extends Phaser.Scene {
             placeableOnWall: false,
             images: {
                 neutral: 'assets/img/sprites/skorjund.png',
+                good: 'assets/img/sprites/skorjund.png',
+                bad: 'assets/img/sprites/skorjund.png',
+                very_bad: 'assets/img/sprites/skorjund.png',
                 inventory: 'assets/img/sprites/skorjund.png'
             }
         });
         this.addfurniture({
-            name: 'tabourney',
-            sizeX: 1, sizeY: 1,
+            name: 'fatbourey',
+            sizeX: 2, sizeY: 2,
             placeableOnWall: true,
             images: {
-                neutral: 'assets/img/sprites/skorjund.png',
+                neutral: 'assets/img/sprites/skorjund_fat.png',
+                good: 'assets/img/sprites/skorjund_fat.png',
+                bad: 'assets/img/sprites/skorjund_fat.png',
+                very_bad: 'assets/img/sprites/skorjund_fat.png',
                 inventory: 'assets/img/sprites/skorjund.png'
             }
         });
@@ -155,16 +165,12 @@ export default class GameScene extends Phaser.Scene {
             INV_WIDTH, INV_HEIGHT,
             CELL_SIZE * 2, CELL_SIZE * 2,
             0xcacaca, 1, 0xFF0000);
+            
+        this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['tabourey'], 0, 0)
+        this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['fatbourey'], 3, 0)
 
-        this.testWall = new Wall(this, this.furnitureList, {
-            sizeX: 13, sizeY: 8, correctFurniturePositions: [], unusablePositions: [[3, 3], [1, 1]]
-        });
-        this.testWall.printTiles();
+        
         this.loadInventorySprites();
-
-        this.testWall.tryToAddFurniture(this.furnitureList['tabourey'], 0, 0);
-        this.testWall.tryToAddFurniture(this.furnitureList['tabourey'], 0, 1);
-        this.testWall.tryToAddFurniture(this.furnitureList['tabourney'], 1, 0);
 
         this.loadWallSprites(this.testWall);
         this.input.on('pointermove', pointer => {

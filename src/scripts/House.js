@@ -5,13 +5,27 @@ export default class House {
     constructor (game, allFurnitures) {
         this.rooms = {
             living_room: {room: new Room(game, allFurnitures, [
-                new Wall(game, allFurnitures, {sizeX: 4, sizeY: 4, correctFurniturePositions: {'fridge': [0, 0]}, unusablePositions: []}),
-                new Wall(game, allFurnitures, {sizeX: 4, sizeY: 4, correctFurniturePositions: {'furnace': [1, 1]}, unusablePositions: []})
+                new Wall(game, allFurnitures, {sizeX: 13, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 13, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 13, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 13, sizeY: 8, correctFurniturePositions: {}})
             ]), unlockAtLevel: 0, links: ['kitchen', 'bathroom', 'bedroom', 'library']},
-            kitchen: {room: new Room(game, allFurnitures, []), unlockAtLevel: 0, links: ['living_room']},
-            bathroom: {room: new Room(game, allFurnitures, []), unlockAtLevel: 0, links: ['living_room']},
-            bedroom: {room: new Room(game, allFurnitures, []), unlockAtLevel: 1, links: ['living_room']},
-            library: {room: new Room(game, allFurnitures, []), unlockAtLevel: 2, links: ['living_room', 'garden']},
+            kitchen: {room: new Room(game, allFurnitures, [
+                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
+            ]), unlockAtLevel: 0, links: ['living_room']},
+            bathroom: {room: new Room(game, allFurnitures, [
+                new Wall(game, allFurnitures, {sizeX: 13, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 13, sizeY: 8, correctFurniturePositions: {}}),
+            ]), unlockAtLevel: 0, links: ['living_room']},
+            bedroom: {room: new Room(game, allFurnitures, [
+                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
+            ]), unlockAtLevel: 1, links: ['living_room']},
+            library: {room: new Room(game, allFurnitures, [
+                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
+                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
+            ]), unlockAtLevel: 2, links: ['living_room', 'garden']},
             garden: {room: new Room(game, allFurnitures, []), unlockAtLevel: 3, links: ['library']}
         }
         this.level = 0
