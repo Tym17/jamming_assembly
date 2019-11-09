@@ -79,6 +79,23 @@ export default class Wall {
         }
         return furnitureNames
     }
+
+    getFurnitures() {
+        let furnitures = [];
+
+        for (let x = 0; x < this.sizeX; ++x) {
+            for (let y = 0; y < this.sizeY; ++y) {
+                const tile = this.tiles[x][y]
+                if (tile.isLowerLeftCorner)
+                    furnitures.push({
+                        name: tile.by.name,
+                        image: tile.by.getCurrentImage(),
+                        pos: {x: x, y: y}
+                    });
+            }
+        }
+        return furnitures;
+    }
     
     findFurniturePosition (furniture) {
         return this.getPresentFurniturePositions()[furniture.name]
