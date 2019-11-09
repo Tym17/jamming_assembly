@@ -1,8 +1,8 @@
 export default class Furniture {
-    constructor (game, {name, blocksX, blocksY, placeableOnWall, images}) {
+    constructor (game, {name, sizeX, sizeY, placeableOnWall, images}) {
         this.name = name
-        this.blocksX = blocksX
-        this.blocksY = blocksY
+        this.sizeX = sizeX
+        this.sizeY = sizeY
         this.placeableOnWall = placeableOnWall
         this.images = images
         this.phase = 'neutral'

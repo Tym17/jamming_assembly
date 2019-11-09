@@ -1,10 +1,9 @@
 import PhaserLogo from '../objects/phaserLogo'
 import FpsText from '../objects/fpsText'
 import Furniture from '../Furniture'
+import Wall from '../Wall'
 
 export default class MainScene extends Phaser.Scene {
-  //fpsText
-
   constructor() {
     super({ key: 'MainScene' })
   }
@@ -23,8 +22,8 @@ export default class MainScene extends Phaser.Scene {
     /*
     let furnace = new Furniture(this, {
       name: 'furnace',
-      blocksX: 1,
-      blocksY: 2,
+      sizeX: 1,
+      sizeY: 2,
       placeableOnWall: false,
       images: {
         inventory: '../phaser-logo.js',
@@ -33,6 +32,17 @@ export default class MainScene extends Phaser.Scene {
         neutral: '../phaser-logo.js',
         good: '../phaser-logo.js'
       }})
+
+    let wall = new Wall(this, {
+      sizeX: 4, sizeY: 4, correctFurniturePositions: [], unusablePositions: [[3, 3], [1, 1]]
+    })
+
+    wall.printTiles()
+    console.log(wall.tryToAddFurniture(furnace, 3, 1))
+    wall.printTiles()
+    console.log(wall.getPresentFurniturePositions())
+    console.log(wall.findFurniturePosition(furnace))
+
     /**
      * Delete all the code below to start a fresh scene
      *
