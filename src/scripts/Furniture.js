@@ -24,6 +24,10 @@ export default class Furniture {
         }
     }
 
+    static mutationProbability () {
+        return 0.5
+    }
+
     getInventoryImage () {
         return `${name}_inventory`
     }

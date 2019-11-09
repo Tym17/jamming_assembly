@@ -7,7 +7,7 @@ export default class Wall {
      * @param int sizeX The number of tiles in the X axis
      * @param int sizeX The number of tiles in the X axis
      */
-    constructor (game, {sizeX, sizeY, correctFurniturePositions, unusablePositions=[]}) {
+    constructor (game, allFurnitures, {sizeX, sizeY, correctFurniturePositions, unusablePositions=[]}) {
         this.sizeX = sizeX
         this.sizeY = sizeY
         this.unusablePositions = unusablePositions
@@ -43,10 +43,8 @@ export default class Wall {
     }
 
     tryToAddFurniture (furniture, x, y) {
-        console.log(furniture)
         const Xs = new Array(furniture.sizeX).fill(0).map((_, i) => x + i)
         const Ys = new Array(furniture.sizeY).fill(0).map((_, i) => y + i)
-        console.log(Xs, Ys)
         // Check if possible
         for (let x of Xs) {
             for (let y of Ys) {
@@ -113,5 +111,22 @@ export default class Wall {
             })
             console.log(str)
         });
+    }
+
+    getMissingFurnitures () {
+        return Object.keys(this.correctFurniturePositions)
+        .filter(name => !Object.keys(this.getPresentFurniturePositions()).includes(name))
+    }
+    getCorrectFurnitures () {
+        return Object.entries(this.correctFurniturePositions)
+        .filter(([name, [x, y]]) => {
+            const pos = this.getPresentFurniturePositions()[name]
+            return pos && pos[0] == x && pos[1] == y;
+        })
+        .map(([name, pos]) => name)
+    }
+    getMisplacedFurnitures () {
+        return Object.keys(this.getPresentFurniturePositions())
+        .filter(name => !this.getCorrectFurnitures().includes(name))
     }
 }

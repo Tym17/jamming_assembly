@@ -2,6 +2,9 @@ import PhaserLogo from '../objects/phaserLogo'
 import FpsText from '../objects/fpsText'
 import Furniture from '../Furniture'
 import Wall from '../Wall'
+import Room from '../Room'
+import House from '../House'
+import Player from '../Player'
 
 export default class MainScene extends Phaser.Scene {
   constructor() {
@@ -9,30 +12,65 @@ export default class MainScene extends Phaser.Scene {
   }
 
   create() {
-    let furnace = new Furniture(this, {
+    const furnace = new Furniture(this, {
       name: 'furnace',
       sizeX: 1,
       sizeY: 2,
       placeableOnWall: false,
       images: {
-        inventory: '../phaser-logo.js',
-        very_bad: '../phaser-logo.js',
-        bad: '../phaser-logo.js',
-        neutral: '../phaser-logo.js',
-        good: '../phaser-logo.js'
+          inventory: '../phaser-logo.js',
+          very_bad: '../phaser-logo.js',
+          bad: '../phaser-logo.js',
+          neutral: '../phaser-logo.js',
+          good: '../phaser-logo.js'
+      }})
+  
+    const fridge = new Furniture(this, {
+      name: 'fridge',
+      sizeX: 2,
+      sizeY: 3,
+      placeableOnWall: false,
+      images: {
+          inventory: '../phaser-logo.js',
+          very_bad: '../phaser-logo.js',
+          bad: '../phaser-logo.js',
+          neutral: '../phaser-logo.js',
+          good: '../phaser-logo.js'
       }})
 
-    let wall = new Wall(this, {
-      sizeX: 4, sizeY: 4, correctFurniturePositions: [], unusablePositions: [[3, 3], [1, 1]]
-    })
+    const allFurnitures = {furnace, fridge}
+  
 
-    wall.printTiles()
-    console.log(wall.tryToAddFurniture(furnace, 3, 1))
-    wall.printTiles()
-    console.log(wall.getPresentFurniturePositions())
-    console.log(wall.findFurniturePosition(furnace))
+    let house = new House(this, allFurnitures)
+    let player = new Player(this, allFurnitures, house)
 
-    /**
+    console.log('Energy: ', player.energy)
+    console.log('Current Room: ', player.currentRoom)
+    console.log('Moving to the kitchen: ', player.move('kitchen'))
+    console.log('Energy: ', player.energy)
+    console.log('Current Room: ', player.currentRoom)
+    console.log('Moving to the living room: ', player.move('living_room'))
+    console.log('Energy: ', player.energy)
+    console.log('Current Room: ', player.currentRoom)
+    console.log('Current Wall: ', player.currentWall)
+    console.log('Rotating right')
+    player.rotateRight()
+    console.log('Energy: ', player.energy)
+    console.log('Current Room: ', player.currentRoom)
+    console.log('Current Wall: ', player.currentWall)
+    console.log('Placing the furnace', player.placeFurniture(furnace, 2, 1))
+    console.log('Rotating left')
+    player.rotateLeft()
+    console.log('Energy: ', player.energy)
+    console.log('Current Room: ', player.currentRoom)
+    console.log('Current Wall: ', player.currentWall)
+    console.log('Energy: ', player.energy)
+    console.log('Correct: ', house.getRoom(player.currentRoom).getAllCorrectFurnitures())
+    console.log('Missing: ', house.getRoom(player.currentRoom).getAllMissingFurnitures())
+    console.log('Misplaced: ', house.getRoom(player.currentRoom).getAllMisplacedFurnitures())
+    player.sleep()
+
+      /**
      * Delete all the code below to start a fresh scene
      */
     new PhaserLogo(this, this.cameras.main.width / 2, 0)
