@@ -156,7 +156,7 @@ export default class GameScene extends Phaser.Scene {
             CELL_SIZE * 2, CELL_SIZE * 2,
             0xcacaca, 1, 0xFF0000);
 
-        this.testWall = new Wall(this, {
+        this.testWall = new Wall(this, this.furnitureList, {
             sizeX: 13, sizeY: 8, correctFurniturePositions: [], unusablePositions: [[3, 3], [1, 1]]
         });
         this.testWall.printTiles();
