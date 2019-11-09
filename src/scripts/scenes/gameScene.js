@@ -82,10 +82,11 @@ export default class GameScene extends Phaser.Scene {
             furniture.setInteractive();
             furniture.name = item.name;
             furniture.on('pointerdown', () => {
-                console.log(`picking up ${item.name}`);
+                if (this.pickUp !== '') { return ;}
                 this.pickUp = item.name;
                 this.roomSprites = this.roomSprites
                     .filter(f => f.name != item.name);
+                wall.tryToRemoveFurniture(this.furnitureList[this.pickUp]);
                 furniture.destroy();
                 this.pickedSprite = this.add.sprite(OFFSETGRID_WIDTH + (item.pos.x * CELL_SIZE),
                     OFFSETGRID_HEIGTH + (item.pos.y * CELL_SIZE),
@@ -107,16 +108,27 @@ export default class GameScene extends Phaser.Scene {
 
         for (let i = 0; i < INV_PAGESIZE; i++) {
             if (invPage[i] === undefined) { break; }
-            let y = i % 2 == 1 ? i - 1 : i;
+            let modi = i % 2
+            let y = modi == 1 ? i - 1 : i;
             let pos = {
-                x: OFFSETINV_WIDTH + ((i % 2) * CELL_SIZE * 2),
+                x: OFFSETINV_WIDTH + (modi * CELL_SIZE * 2),
                 y: OFFSETINV_HEIGTH + (y * CELL_SIZE)
             };
-            this.invSprites.push(this.add.sprite(pos.x, pos.y,
-                this.furnitureList[invPage[i]].getInventoryImage())
-                .setDisplayOrigin(0, 0));
-            console.info(this.furnitureList[invPage[i]]);
-            console.info(this.furnitureList[invPage[i]].getInventoryImage());
+            let invElem = this.add.sprite(pos.x, pos.y,
+                this.furnitureList[invPage[i]].getInventoryImage());
+            invElem.setDisplayOrigin(0, 0);
+            invElem.name = invPage[i];
+            invElem.setInteractive();
+            invElem.on('pointerdown', () => {
+                if (this.pickUp !== '') { return ;}
+                this.pickUp = invElem.name;
+                this.inventory = this.inventory
+                    .filter(it => it != invPage[i]);
+                this.loadInventorySprites();
+                this.pickedSprite = this.add.sprite(pos.x, pos.y,
+                    this.furnitureList[invPage[i]].getInventoryImage());
+            });
+            this.invSprites.push(invElem);
         }
 
     }
@@ -145,13 +157,14 @@ export default class GameScene extends Phaser.Scene {
             0xcacaca, 1, 0xFF0000);
 
         this.testWall = new Wall(this, {
-            sizeX: 4, sizeY: 4, correctFurniturePositions: [], unusablePositions: [[3, 3], [1, 1]]
+            sizeX: 13, sizeY: 8, correctFurniturePositions: [], unusablePositions: [[3, 3], [1, 1]]
         });
         this.testWall.printTiles();
         this.loadInventorySprites();
 
         this.testWall.tryToAddFurniture(this.furnitureList['tabourey'], 0, 0);
         this.testWall.tryToAddFurniture(this.furnitureList['tabourey'], 0, 1);
+        this.testWall.tryToAddFurniture(this.furnitureList['tabourney'], 1, 0);
 
         this.loadWallSprites(this.testWall);
         this.input.on('pointermove', pointer => {
@@ -166,23 +179,22 @@ export default class GameScene extends Phaser.Scene {
                     x: this.pickedSprite.x,
                     y: this.pickedSprite.y
                 };
-                console.log('up', pos);
-                console.log( {
-                    pos: {x: OFFSETINV_WIDTH, y: OFFSETINV_HEIGTH},
-                    width: INV_WIDTH, height: INV_HEIGHT
-                });
                 if (this.isInArea(pos, {
                     pos: {x: OFFSETGRID_WIDTH, y: OFFSETGRID_HEIGTH},
                     width: GRID_WIDTH, heigth: GRID_HEIGTH
                 })) {
-                    // drop in wall;
-                    console.info('drop in walls');
+                    let localPos = {
+                        x: Math.trunc((pos.x - OFFSETGRID_WIDTH) / CELL_SIZE),
+                        y: Math.trunc((pos.y - OFFSETGRID_HEIGTH) / CELL_SIZE),
+                    };
+                    if (this.testWall.tryToAddFurniture(this.furnitureList[this.pickUp], 
+                        localPos.x, localPos.y)) {
+                            this.pickUp = '';
+                            this.pickedSprite.destroy();
+                            this.loadWallSprites(this.testWall);
+                        }
                 }
-                else if (this.isInArea(pos, {
-                    pos: {x: OFFSETINV_WIDTH, y: OFFSETINV_HEIGTH},
-                    width: INV_WIDTH, heigth: INV_HEIGHT
-                })) {
-                    console.log('inv drop in');
+                else {
                     this.inventory.push(this.pickUp);
                     this.pickUp = '';
                     this.pickedSprite.destroy();
