@@ -5,6 +5,7 @@ export default class Player {
     constructor (game, allFurnitures, house) {
         this.game = game
         this.house = house
+        this.house.setPlayer(this)
         this.mentalHealth = 100
         this.energyPerDay = 3
         this.energy = this.energyPerDay
@@ -150,7 +151,8 @@ export default class Player {
     }
 
     move (to) {
-        if (this.house.canTransition(this.currentRoom, to) && this.energy >= this.energyUsedByWalking) {
+        console.log('trying to move')
+        if (this.house.canTransition(this.currentRoom, to)) {
             this.energy -= this.energyUsedByWalking
             this._exitWall()
             this.currentRoom = to
@@ -167,8 +169,11 @@ export default class Player {
                     this.takeDamage(5)
                 }
             }
+            this.checkEndOfDay()
+            console.log('move success')
             return true
         }
+        console.log('move failed')
         return false
     }
 

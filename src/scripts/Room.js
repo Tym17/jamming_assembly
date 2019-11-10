@@ -79,15 +79,17 @@ export default class Room {
     }
 
     worsen() {
+        const phase = this.phase
         Room.validatePhaseName(this.phase)
-        if (this.phase == Room.phases()[0]) return; // Cannot worsen
         this.phase = Room.phases()[Room.phases().indexOf(this.phase) - 1]
+        if (!this.phase) this.phase = phase
     }
 
     improve() {
+        const phase = this.phase
         Room.validatePhaseName(this.phase)
-        if (this.phase == Room.phases()[-1]) return; // Cannot improve
         this.phase = Room.phases()[Room.phases().indexOf(this.phase) + 1]
+        if (!this.phase) this.phase = phase
     }
 
 

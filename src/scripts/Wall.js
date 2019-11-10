@@ -9,7 +9,7 @@ export default class Wall {
      * @param int sizeX The number of tiles in the X axis
      * @param int sizeX The number of tiles in the X axis
      */
-    constructor (game, allFurnitures, {sizeX, sizeY, correctFurniturePositions, unusablePositions=[]}) {
+    constructor (game, allFurnitures, {sizeX, sizeY, correctFurniturePositions, unusablePositions=[], doors=[]}) {
         this.game = game
         this.sizeX = sizeX
         this.sizeY = sizeY
@@ -22,6 +22,7 @@ export default class Wall {
         this.arrowRightCB = () => {}
         this.resetTiles()
         this.spriteClickCB = () => {}
+        this.doors = doors // door = {x, y, onClick}
     }
 
     onSpriteClick(cb) {
@@ -190,7 +191,7 @@ export default class Wall {
 
             this.sprites.push(sprite)
         })
-        this.arrowLeft = this.game.add.sprite(UIConfig.sceneGrid.positionBottomLeft(this.sizeX, this.sizeY)[0] - UIConfig.sceneGrid.tileSize,
+        this.arrowLeft = this.game.add.sprite(UIConfig.sceneGrid.positionBottomLeft(this.sizeX, this.sizeY)[0] - UIConfig.sceneGrid.tileSize * 1.5,
                                               UIConfig.sceneGrid.positionCenter[1],
                                               'arrow_left')
         this.arrowLeft.setInteractive();
@@ -198,7 +199,7 @@ export default class Wall {
             this.arrowLeftCB(event)
         });
 
-        this.arrowRight = this.game.add.sprite(UIConfig.sceneGrid.positionBottomLeft(this.sizeX, this.sizeY)[0] + UIConfig.sceneGrid.tileSize * (this.sizeX + 1),
+        this.arrowRight = this.game.add.sprite(UIConfig.sceneGrid.positionBottomLeft(this.sizeX, this.sizeY)[0] + UIConfig.sceneGrid.tileSize * (this.sizeX + 1.5),
                                                UIConfig.sceneGrid.positionCenter[1],
                                                'arrow_right')
         this.arrowRight.setInteractive();
@@ -206,6 +207,17 @@ export default class Wall {
             this.arrowRightCB(event)
         });
 
+        this.doors.forEach(door => {
+            door.sprite = this.game.add.sprite(UIConfig.sceneGrid.tileToPixel(door.x, door.x)[0],
+                                               UIConfig.sceneGrid.tileToPixel(door.x, door.x)[1],
+                                               'door')
+            door.sprite.setDisplayOrigin(-UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize * 4)
+            door.sprite.setInteractive()
+            door.sprite.on('pointerdown', (event) => {
+                if (door.onClick)
+                    door.onClick(event, door)
+            })
+        })
     }
 
     exit() {
@@ -217,5 +229,12 @@ export default class Wall {
         this.arrowRight = undefined
         this.arrowLeft.destroy()
         this.arrowLeft = undefined
+
+        this.doors.forEach(door => {
+            if (door.sprite) {
+                door.sprite.destroy()
+                door.sprite = undefined
+            }
+        })
     }
 }

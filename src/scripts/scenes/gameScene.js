@@ -78,6 +78,8 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('arrow_right', 'assets/img/sprites/arrow_right.png')
         this.load.image('arrow_left', 'assets/img/sprites/arrow_left.png')
 
+        this.load.image('door', 'assets/img/sprites/door.png')
+
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
     }
@@ -129,6 +131,12 @@ export default class GameScene extends Phaser.Scene {
             console.log(event.position)
             UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)
         });
+
+        setTimeout(() => {
+            console.log('plop')
+            this.house.getRoom('living_room').validated = true
+            this.house.performMutations()
+        }, 10000)
     }
 
     update() {

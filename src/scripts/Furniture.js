@@ -38,15 +38,17 @@ export default class Furniture {
     }
 
     worsen() {
+        const phase = this.phase
         Furniture.validatePhaseName(this.phase)
-        if (this.phase == Furniture.phases()[0]) return; // Cannot worsen
         this.phase = Furniture.phases()[Furniture.phases().indexOf(this.phase) - 1]
+        if (!this.phase) this.phase = phase
     }
 
     improve() {
+        const phase = this.phase
         Furniture.validatePhaseName(this.phase)
-        if (this.phase == Furniture.phases()[-1]) return; // Cannot improve
         this.phase = Furniture.phases()[Furniture.phases().indexOf(this.phase) + 1]
+        if (!this.phase) this.phase = phase
     }
 
     getCurrentImage () {
