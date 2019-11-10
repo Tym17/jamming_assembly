@@ -14,7 +14,7 @@ export default class OverScene extends Phaser.Scene {
   create() {
     let rect = this.add.rectangle(0, 0, 1920, 1080, 0);
     rect.setDisplayOrigin(0, 0);
-    this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Game over', 
+    this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Je claque la porte', 
     { fill: '#FFF', fontSize: 72});
 
   }

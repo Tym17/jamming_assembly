@@ -9,9 +9,10 @@ const DAY_PART = DAY_LENGTH / 3;
 export default class Player {
     constructor(game, allFurnitures, house) {
         this.game = game
+        this.endGame = false;
         this.house = house
         this.house.setPlayer(this)
-        this.mentalHealth = 100
+        this.mentalHealth = 10
         this.energyPerDay = 3
         this.energy = this.energyPerDay
         this.energyUsedByWalking = 0.5
@@ -264,6 +265,13 @@ export default class Player {
         console.log('Sleeping', this.mentalHealth);
         this.house.performMutations()
         this.checkHealth();
+        if (this.mentalHealth <= 0 && !this.endGame) {
+            this.gameOver();
+            return;
+        }
+        if (this.endGame) {
+            return;
+        }
         this.energy = this.energyPerDay
         this.house.getRoom(this.currentRoom).checkNotes()
         this.hud.updateEye(this.energy, this.mentalHealth)
@@ -284,7 +292,10 @@ export default class Player {
     }
 
     gameOver() {
-        this.hud.nightTime(false);
+        if (!this.endGame) {
+            this.endGame = true;
+            this.hud.nightTime(false);
+        }
     }
 
     update(time, delta) {

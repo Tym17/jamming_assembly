@@ -102,6 +102,9 @@ export default class NotesInventory {
     }
 
     enlargeNote(chosen) {
+        if (this.detailedNoteSprite !== undefined) {
+            return;
+        }
         this.overlay.setVisible(true);
         this.detailedNoteSprite = this.game.add.sprite(
             VIEW_WIDTH / 2, VIEW_HEIGHT / 2,

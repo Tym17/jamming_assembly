@@ -176,6 +176,27 @@ export default class Indicators {
                 }
             } else {
                 if (!this.continueGame) {
+                    this.transitionning = false;
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
+                    console.error('GAME OVER')
                     this.game.scene.start('OverScene');
                 }
                 this.sleepOverlay.setAlpha(alpha - (delta * SLEEPING_SPEED));
@@ -183,7 +204,9 @@ export default class Indicators {
                     this.sleepOverlay.alpha = 0;
                     this.transitionning = false;
                 }
-            }
+            } 
+        } else {
+            this.sleepOverlay.setAlpha(0);
         }
     }
 
