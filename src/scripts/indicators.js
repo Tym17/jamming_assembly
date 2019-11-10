@@ -98,7 +98,7 @@ export default class Indicators {
     }
 
     updateEye(tiredness, craziness) {
-        tiredness = Math.trunc(3 - tiredness);
+        tiredness = Math.trunc(3 - (3 * tiredness / 15));
         if (tiredness === 3) {
             tiredness = 2;
         }
