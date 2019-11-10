@@ -192,12 +192,26 @@ export default class Wall {
 
         this.doors.forEach(door => {
             const pos = UIConfig.sceneGrid.tileToPixel(door.x + UIConfig.doors.offset[0], door.y + UIConfig.doors.offset[1])
-            door.sprite = this.game.add.sprite(pos[0], pos[1], door.invisible ? 'invisible_door' : 'door')
+            door.sprite = this.game.add.sprite(pos[0], pos[1], door.texture || 'door')
             door.sprite.setInteractive()
             door.sprite.on('pointerdown', (event) => {
                 if (door.onClick)
                     door.onClick(event, door)
             })
+            if (door.tooltip) {
+                door.sprite.on('pointerover', () => {
+                    door.text = this.game.add.text(door.sprite.x, door.sprite.y, door.tooltip, {
+                        fontSize: 32,
+                        backgroundColor: 0xA0A0A0
+                    })
+                })
+                door.sprite.on('pointerout', () => {
+                    if (door.text) {
+                        door.text.destroy()
+                        door.text = undefined
+                    }
+                }, this)
+            }
         })
 
         this.getFurnitures().forEach(furniture => {
@@ -258,6 +272,10 @@ export default class Wall {
             if (door.sprite) {
                 door.sprite.destroy()
                 door.sprite = undefined
+            }
+            if (door.text) {
+                door.text.destroy()
+                door.text = undefined
             }
         })
     }

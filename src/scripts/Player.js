@@ -109,7 +109,7 @@ export default class Player {
             });
         })
 
-        const posLeft = UIConfig.inventoryGrid.tileToPixel(0, 3, 2, 3)
+        const posLeft = UIConfig.inventoryGrid.tileToPixel(0, 2.8, 2, 3)
         this.inventoryArrowLeft = this.game.add.sprite(posLeft[0], posLeft[1], 'arrow_left')
         if (this.inventoryPage > 0) {
             this.inventoryArrowLeft.setInteractive()
@@ -121,7 +121,7 @@ export default class Player {
             this.inventoryArrowLeft.visible = false
         }
 
-        const posRight = UIConfig.inventoryGrid.tileToPixel(1, 3, 2, 3)
+        const posRight = UIConfig.inventoryGrid.tileToPixel(1, 2.8, 2, 3)
         this.inventoryArrowRight = this.game.add.sprite(posRight[0], posRight[1], 'arrow_right')
         if (this.inventoryPage + 1 < this.inventory.length / 6) {
             this.inventoryArrowRight.setInteractive()

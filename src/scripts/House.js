@@ -9,12 +9,12 @@ export default class House {
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 2, y: 1, onClick: (() => { this.player.move('bathroom') }), invisible: true}],
+                    doors: [{x: 2, y: 1, onClick: (() => { this.player.move('bathroom') }), texture: 'invisible_door', tooltip: 'Entrer'}],
                     backgrounds: {'good': 'living_room_0_neutral', 'neutral': 'living_room_0_neutral', 'bad': 'living_room_0_neutral', 'very_bad': 'living_room_0_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 8, y: 1, onClick: (() => { this.player.move('kitchen') }), invisible: true}],
+                    doors: [{x: 8, y: 1, onClick: (() => { this.player.move('kitchen') }), texture: 'invisible_door', tooltip: 'Entrer'}],
                     backgrounds: {'good': 'living_room_1_neutral', 'neutral': 'living_room_1_neutral', 'bad': 'living_room_1_neutral', 'very_bad': 'living_room_1_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
@@ -36,7 +36,7 @@ export default class House {
                 new Wall(game, allFurnitures, {
                     sizeX: 9, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 3, y: 1, onClick: (() => { this.player.move('living_room', 3) }), invisible: true}],
+                    doors: [{x: 3, y: 1, onClick: (() => { this.player.move('living_room', 3) }), texture: 'invisible_door', tooltip: 'Entrer'}],
                     backgrounds: {'good': 'kitchen_1_neutral', 'neutral': 'kitchen_1_neutral', 'bad': 'kitchen_1_neutral', 'very_bad': 'kitchen_1_neutral'}}),
                 ]),
                 unlockAtLevel: 0,
@@ -46,6 +46,7 @@ export default class House {
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
+                    doors: [{x: 5.5, y: -3, onClick: (() => { this.player.move('living_room', 2) }), texture: 'arrow_down', tooltip: 'Sortir'}],
                     backgrounds: {'good': 'bathroom_0_neutral', 'neutral': 'bathroom_0_neutral', 'bad': 'bathroom_0_neutral', 'very_bad': 'bathroom_0_neutral'}}),
                 ]),
                 unlockAtLevel: 0,
@@ -122,10 +123,10 @@ export default class House {
     _upgradeLvL1 () {
         this.level = 1
         this.rooms['living_room'].room.walls[0].doors.push({
-            x: 8, y: 1, onClick: (() => { this.player.move('bedroom') })
+            x: 8, y: 1, onClick: (() => { this.player.move('bedroom') }), tooltip: 'Entrer'
         })
         this.rooms['bedroom'].room.walls[1].doors.push({
-            x: 2.75, y: 0.95, onClick: (() => { this.player.move('living_room', 2) })
+            x: 2.75, y: 0.95, onClick: (() => { this.player.move('living_room', 2) }), tooltip: 'Entrer'
         })
         this.player._exitWall()
         this.player._enterWall()
@@ -134,10 +135,10 @@ export default class House {
     _upgradeLvL2 () {
         this.level = 2
         this.rooms['living_room'].room.walls[3].doors.push({
-            x: 3, y: 1, onClick: (() => { this.player.move('library') })
+            x: 3, y: 1, onClick: (() => { this.player.move('library') }), tooltip: 'Entrer'
         })
         this.rooms['library'].room.walls[1].doors.push({
-            x: 7, y: 1, onClick: (() => { this.player.move('living_room', 1) })
+            x: 7, y: 1, onClick: (() => { this.player.move('living_room', 1) }), tooltip: 'Entrer'
         })
         this.player._exitWall()
         this.player._enterWall()
@@ -146,7 +147,7 @@ export default class House {
     _upgradeLvL3 () {
         this.level = 3
         this.rooms['library'].room.walls[0].doors.push({
-            x: 8, y: 1, onClick: (() => { this.player.move('garden') }), invisible: true
+            x: 8, y: 1, onClick: (() => { this.player.move('garden') }), texture: 'invisible_door', tooltip: '???'
         })
         this.player._exitWall()
         this.player._enterWall()
