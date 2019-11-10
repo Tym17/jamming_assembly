@@ -14,7 +14,7 @@ const INVENTORY_GRID_POS_Y = 564
 const inventoryGridPositionBottomLeft = (x, y) => ([INVENTORY_GRID_POS_X - (x / 2 - 0.5) * INVENTORY_GRID_TILESIZE,
                                                     INVENTORY_GRID_POS_Y - (y / 2 - 0.5) * INVENTORY_GRID_TILESIZE])
 const inventoryGridTileToPixel = (x, y, maxX=2, maxY=3) => ([inventoryGridPositionBottomLeft(maxX, maxY)[0] + x * INVENTORY_GRID_TILESIZE,
-                                                             inventoryGridPositionBottomLeft(maxX, maxY)[1] - y * INVENTORY_GRID_TILESIZE])
+                                                             inventoryGridPositionBottomLeft(maxX, maxY)[1] + y * INVENTORY_GRID_TILESIZE])
                                                           
 
 export default {

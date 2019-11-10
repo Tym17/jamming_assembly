@@ -79,6 +79,14 @@ export default class Player {
             elem.sprite.destroy()
             elem.sprite = undefined
         })
+        if (this.inventoryArrowLeft) {
+            this.inventoryArrowLeft.destroy()
+            this.inventoryArrowLeft = undefined
+        }
+        if (this.inventoryArrowRight) {
+            this.inventoryArrowRight.destroy()
+            this.inventoryArrowRight = undefined
+        }
         this.inventory
         .slice(this.inventoryPage * 6, (this.inventoryPage + 1) * 6)
         .forEach((elem, idx) => {
@@ -92,6 +100,30 @@ export default class Player {
                 this._takeFromInventoryToDragging(elem, event.position.x, event.position.y);
             });
         })
+
+        const posLeft = UIConfig.inventoryGrid.tileToPixel(0, 3, 2, 3)
+        this.inventoryArrowLeft = this.game.add.sprite(posLeft[0], posLeft[1], 'arrow_left')
+        if (this.inventoryPage > 0) {
+            this.inventoryArrowLeft.setInteractive()
+            this.inventoryArrowLeft.on('pointerdown', () => {
+                --this.inventoryPage
+                this._refreshInventory()
+            })
+        } else {
+            this.inventoryArrowLeft.visible = false
+        }
+
+        const posRight = UIConfig.inventoryGrid.tileToPixel(1, 3, 2, 3)
+        this.inventoryArrowRight = this.game.add.sprite(posRight[0], posRight[1], 'arrow_right')
+        if (this.inventoryPage + 1 < this.inventory.length / 6) {
+            this.inventoryArrowRight.setInteractive()
+            this.inventoryArrowRight.on('pointerdown', () => {
+                ++this.inventoryPage
+                this._refreshInventory()
+            })
+        } else {
+            this.inventoryArrowRight.visible = false
+        }
     }
 
     _destroyCurrentlyDragging () {
