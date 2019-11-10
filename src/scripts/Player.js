@@ -1,6 +1,10 @@
 import House from "./House"
 import NotesInventory from './notesInventory'
 import UIConfig from "./UIConfig"
+import Indicators from "./indicators"
+
+const DAY_LENGTH = 1.5 * 60 * 1000;
+const DAY_PART = DAY_LENGTH / 3;
 
 export default class Player {
     constructor (game, allFurnitures, house) {
@@ -19,7 +23,8 @@ export default class Player {
         this.inventoryPage = 0
         this.notes = new NotesInventory(game);
         this.currentlyDragging = undefined
-
+        this.hud = new Indicators(game);
+        this.timeInDayInMs = 0;
         
         game.input.on('pointermove', pointer => {
             if (this.currentlyDragging) {
@@ -64,15 +69,7 @@ export default class Player {
     create() {
         this._refreshInventory()
         this._enterWall()
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockBook();
+        this.hud.create();
     }
 
     addToInventory (furniture) {
@@ -213,6 +210,7 @@ export default class Player {
             }
             this.checkEndOfDay()
             console.log('move success')
+            this.hud.updateEye(this.energy, this.mentalHealth);
             return true
         }
         console.log('move failed')
@@ -222,6 +220,9 @@ export default class Player {
     placeFurniture (furniture, x, y) {
         if (this.house.getRoom(this.currentRoom).walls[this.currentWall].tryToAddFurniture(furniture, x, y)) {
             this.energy -= this.energyUsedByPlacing
+            this.checkEndOfDay();
+            this.hud.updateEye(this.energy, this.mentalHealth);
+
             return true
         }
         return false
@@ -246,7 +247,7 @@ export default class Player {
     }
 
     checkEndOfDay () {
-        if (this.energy <= 0) { // TODO: OR TIMEOUT
+        if (this.energy <= 0 || this.timeInDayInMs > DAY_LENGTH) { // TODO: OR TIMEOUT
             this.sleep()
         }
     }
@@ -255,15 +256,30 @@ export default class Player {
         console.log('Sleeping')
         this.house.performMutations()
         this.energy = this.energyPerDay
+        this.hud.updateEye(this.energy, this.mentalHealth)
+        this.hud.nightTime();
+        this.timeInDayInMs = 0;
     }
 
     takeDamage (damage) {
         this.mentalHealth -= damage
         if (this.mentalHealth >= 100) this.mentalHealth = 100
-        if (this.mentalHealth <= 0) this.gameOver()
+        if (this.mentalHealth <= 0) {
+            this.gameOver();
+            return;
+        }
+
+        this.hud.updateEye(this.energy, this.mentalHealth);
     }
 
     gameOver () {
         console.error('GAME OVER') // TODO
+    }
+
+    update(time, delta) {
+        this.hud.update(time, delta);
+        this.timeInDayInMs += delta;
+        this.hud.updateSun((this.timeInDayInMs * 3) / DAY_LENGTH);
+        this.checkEndOfDay();
     }
 }

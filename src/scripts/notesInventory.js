@@ -33,9 +33,11 @@ export default class NotesInventory {
         this.detailedNoteSprite = undefined;
         this.isBookUnlocked = false;
 
+        /* Debug rect
         this.game.add.rectangle(INV_X, INV_Y,
             INV_WIDTH, INV_HEIGHT, 0xdadada);
-
+            */
+        
         this.overlay = this.game.add.rectangle(0, 0,
             VIEW_WIDTH, VIEW_HEIGHT, 0, 0.7
         );
@@ -57,6 +59,10 @@ export default class NotesInventory {
             this.game.load.image(`note_${i}_icon`, `assets/img/sprites/notes/papier_icone_${i + 1}.png`);
             this.game.load.image(`note_${i}_details`, `assets/img/sprites/notes/details_${i}.png`);
         }
+
+        this.game.load.image('book_icon', 'assets/img/sprites/notes/icone_livreok.png');
+        this.game.load.image('book_details', 'assets/img/sprites/notes/livre_demon.png');
+
         // TODO: load book sprite
     }
 
@@ -94,10 +100,9 @@ export default class NotesInventory {
     openBook(that) {
         return () => {
             that.overlay.setVisible(true);
-            // TODO change sprite for the book's
             that.detailedNoteSprite = that.game.add.sprite(
                 VIEW_WIDTH / 2, VIEW_HEIGHT / 2,
-                `note_${0}_details`
+                'book_details'
             );
             that.detailedNoteSprite.setDepth(OVERLAY_DEPTH + 1);
             that.detailedNoteSprite.setInteractive();
@@ -110,10 +115,10 @@ export default class NotesInventory {
             console.error('Book is already unlocked');
             return;
         }
-        let bookSprite = this.game.add.rectangle(
+        let bookSprite = this.game.add.sprite(
             NOTES_OFFSET_X + INV_WIDTH - NOTE_SIZE - (NOTES_INV_PADDING_X * 2),
             NOTES_OFFSET_Y,
-            NOTE_SIZE, NOTE_SIZE, 0x00FF00 // TODO replace by book sprite
+            'book_icon'
         );
         bookSprite.setDisplayOrigin(0, 0);
         bookSprite.setInteractive();
