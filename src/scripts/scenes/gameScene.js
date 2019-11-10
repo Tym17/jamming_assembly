@@ -46,10 +46,22 @@ export default class GameScene extends Phaser.Scene {
     addfurniture(furniture) {
         this.furnitureList[furniture.name] = new Furniture(this, furniture);
         this.inventory.push(furniture.name);
+        return this.furnitureList[furniture.name]
+    }
+
+    buildImageNames (path, baseFilename) {
+        const baseFurnitureName = path + '/furnitures/' + baseFilename
+        const baseInventoryName = path + '/inventory/' + baseFilename
+        return {
+            good: baseFurnitureName + '_neutral.png',
+            neutral: baseFurnitureName + '_neutral.png',
+            bad: baseFurnitureName + '_bad.png',
+            very_bad: baseFurnitureName + '_bad.png',
+            inventory: baseInventoryName + '_neutral.png'
+        }
     }
 
     preload() {
-        // TODO CREATE  EVERY FURNITURE HERE
         this.addfurniture({
             name: 'tabourey',
             sizeX: 1, sizeY: 1,
@@ -74,35 +86,49 @@ export default class GameScene extends Phaser.Scene {
                 inventory: 'assets/img/sprites/skorjund.png'
             }
         });
-        this.addfurniture({
-            name: 'fatbourey',
-            sizeX: 2, sizeY: 2,
-            placeableOnWall: true,
-            images: {
-                neutral: 'assets/img/sprites/skorjund_fat.png',
-                good: 'assets/img/sprites/skorjund_fat.png',
-                bad: 'assets/img/sprites/skorjund_fat.png',
-                very_bad: 'assets/img/sprites/skorjund_fat.png',
-                inventory: 'assets/img/sprites/skorjund.png'
-            }
-        });
-        this.addfurniture({
-            name: 'desk',
-            sizeX: 4, sizeY: 3,
-            placeableOnWall: false,
-            images: {
-                neutral: 'assets/img/sprites/furnitures/desk_neutral.png',
-                good: 'assets/img/sprites/furnitures/desk_neutral.png',
-                bad: 'assets/img/sprites/furnitures/desk_neutral.png',
-                very_bad: 'assets/img/sprites/furnitures/desk_neutral.png',
-                inventory: 'assets/img/sprites/skorjund.png'
-            }
-        });
+
+        const furnituresData = {
+            bibliotheque_bibliotheque: {sizeX: 5, sizeY: 6, placeableOnWall: false},
+            bibliotheque_bureau: {sizeX: 4, sizeY: 3, placeableOnWall: false},
+            bibliotheque_canape: {sizeX: 2, sizeY: 3, placeableOnWall: false},
+            chambre_armoire: {sizeX: 3, sizeY: 5, placeableOnWall: false},
+            chambre_chevet: {sizeX: 2, sizeY: 3, placeableOnWall: false},
+            chambre_lit: {sizeX: 3, sizeY: 3, placeableOnWall: false},
+            chambre_miroir: {sizeX: 2, sizeY: 4, placeableOnWall: false},
+            cuisine_cuisiniere: {sizeX: 3, sizeY: 3, placeableOnWall: false},
+            cuisine_evier: {sizeX: 2, sizeY: 3, placeableOnWall: false},
+            cuisine_frigo: {sizeX: 2, sizeY: 4, placeableOnWall: false},
+            cuisine_pendule: {sizeX: 2, sizeY: 2, placeableOnWall: true},
+            cuisine_placard: {sizeX: 7, sizeY: 2, placeableOnWall: true},
+            cuisine_table: {sizeX: 5, sizeY: 3, placeableOnWall: false},
+            salon_canape: {sizeX: 4, sizeY: 3, placeableOnWall: false},
+            salon_etagere: {sizeX: 3, sizeY: 4, placeableOnWall: false},
+            salon_gramophone: {sizeX: 2, sizeY: 4, placeableOnWall: false},
+            salon_lampe: {sizeX: 1, sizeY: 4, placeableOnWall: false},
+            salon_plante: {sizeX: 2, sizeY: 3, placeableOnWall: false},
+            salon_portemanteau: {sizeX: 1, sizeY: 5, placeableOnWall: false},
+            salon_tableau: {sizeX: 2, sizeY: 2, placeableOnWall: true},
+            salon_tele: {sizeX: 3, sizeY: 4, placeableOnWall: false},
+            sdb_baignoire: {sizeX: 6, sizeY: 6, placeableOnWall: false},
+            sdb_lavabo: {sizeX: 2, sizeY: 4, placeableOnWall: false},
+            sdb_miroir: {sizeX: 2, sizeY: 2, placeableOnWall: true},
+            sdb_toilettes: {sizeX: 2, sizeY: 3, placeableOnWall: false}
+        }
+        const furnitures = Object.entries(furnituresData).map(([furniture, info]) => {
+            return this.addfurniture({
+                name: furniture,
+                sizeX: info.sizeX, sizeY: info.sizeY,
+                placeableOnWall: info.placeableOnWall,
+                images: this.buildImageNames('assets/img/sprites', furniture)
+            })
+        })
 
         this.load.image('arrow_right', 'assets/img/sprites/arrow_right.png')
         this.load.image('arrow_left', 'assets/img/sprites/arrow_left.png')
+        this.load.image('arrow_down', 'assets/img/sprites/arrow_down.png')
 
         this.load.image('door', 'assets/img/sprites/door.png')
+        this.load.image('invisible_door', 'assets/img/sprites/invisible_door.png')
 
         this.load.image('living_room_0_neutral', 'assets/img/sprites/rooms/salon_face.png')
         this.load.image('living_room_1_neutral', 'assets/img/sprites/rooms/salon_gauche.png')
@@ -120,21 +146,15 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('kitchen_0_neutral', 'assets/img/sprites/rooms/cuisine_face.png')
         this.load.image('kitchen_1_neutral', 'assets/img/sprites/rooms/cuisine_porte.png')
 
-
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
         
         this.house = new House(this, this.furnitureList)
-        this.house.rooms.living_room.room.walls[1].tryToAddFurniture(this.furnitureList['tabourey'], 2, 5)
-        
-        this.house.rooms.living_room.room.walls[2].tryToAddFurniture(this.furnitureList['fatbourey'], 4, 4)
-        
-        this.house.rooms.living_room.room.walls[3].tryToAddFurniture(this.furnitureList['fatbourey'], 8, 2)
-        
         this.player = new Player(this, this.furnitureList, this.house);
-        
-        this.player.addToInventory(this.furnitureList['tabourey'])
-        this.player.addToInventory(this.furnitureList['fatbourey'])
+
+        furnitures.map(f => {
+            this.player.addToInventory(f)
+        })
     }
     
     /**
@@ -170,12 +190,11 @@ export default class GameScene extends Phaser.Scene {
             console.log(event.position)
             UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)
         });
-
-        setTimeout(() => {
-            console.log('plop')
-            this.house.getRoom('living_room').validated = true
-            this.house.performMutations()
-        }, 10000)
+/*
+        this.house._upgradeLvL1()
+        this.house._upgradeLvL2()
+        this.house._upgradeLvL3()
+*/
     }
 
     update(time, delta) {
