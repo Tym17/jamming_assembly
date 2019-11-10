@@ -27,10 +27,11 @@ export default class Player {
             if (this.currentlyDragging) {
                 const wall = this.house.getRoom(this.currentRoom).walls[this.currentWall]
                 const tilePos = UIConfig.sceneGrid.pixelToTile(pointer.x, pointer.y, wall.sizeX, wall.sizeY)
-                if (tilePos[0] < 0) tilePos[0] = 0
-                if (tilePos[1] < 0) tilePos[1] = 0
-                if (tilePos[0] + this.currentlyDragging.furniture.sizeX >= wall.sizeX) tilePos[0] = wall.sizeX - this.currentlyDragging.furniture.sizeX 
-                if (tilePos[1] + this.currentlyDragging.furniture.sizeY >= wall.sizeY) tilePos[1] = wall.sizeY - this.currentlyDragging.furniture.sizeX 
+                let clampedTilePos = [...tilePos]
+                if (clampedTilePos[0] < 0) clampedTilePos[0] = 0
+                if (clampedTilePos[1] < 0) clampedTilePos[1] = 0
+                if (clampedTilePos[0] + this.currentlyDragging.furniture.sizeX >= wall.sizeX) clampedTilePos[0] = wall.sizeX - this.currentlyDragging.furniture.sizeX 
+                if (clampedTilePos[1] + this.currentlyDragging.furniture.sizeY >= wall.sizeY) clampedTilePos[1] = wall.sizeY - this.currentlyDragging.furniture.sizeX 
                 // Cannot place => red tint
                 if (!house.getRoom(this.currentRoom).walls[this.currentWall].canAddFurniture(this.currentlyDragging.furniture, tilePos[0], tilePos[1])) {
                     this.currentlyDragging.sprite.tint = 0xFF0000
@@ -153,7 +154,7 @@ export default class Player {
             elem.sprite.destroy()
             console.log(elem, this.inventory)
             this.inventory = this.inventory.filter(e => e.furniture.name != elem.furniture.name)
-            this._refreshInventory
+            this._refreshInventory()
         }
     }
 

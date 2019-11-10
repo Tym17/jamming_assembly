@@ -9,7 +9,7 @@ export default class Wall {
      * @param int sizeX The number of tiles in the X axis
      * @param int sizeX The number of tiles in the X axis
      */
-    constructor (game, allFurnitures, {sizeX, sizeY, correctFurniturePositions, unusablePositions=[], doors=[]}) {
+    constructor (game, allFurnitures, {sizeX, sizeY, correctFurniturePositions, unusablePositions=[], doors=[], backgrounds={}}) {
         this.game = game
         this.sizeX = sizeX
         this.sizeY = sizeY
@@ -23,6 +23,12 @@ export default class Wall {
         this.resetTiles()
         this.spriteClickCB = () => {}
         this.doors = doors // door = {x, y, onClick}
+        this.backgrounds = backgrounds
+        this.backgroundSprite = undefined
+    }
+
+    setRoom (room) {
+        this.room = room
     }
 
     onSpriteClick(cb) {
@@ -65,14 +71,19 @@ export default class Wall {
     }
 
     canAddFurniture(furniture, x, y) {
-        if (!furniture.placeableOnWall && y != 0) return false
+        if (!furniture.placeableOnWall && y > 1) return false
+        if (furniture.placeableOnWall && y <= 1) return false
         const Xs = new Array(furniture.sizeX).fill(0).map((_, i) => x + i)
         const Ys = new Array(furniture.sizeY).fill(0).map((_, i) => y + i)
         // Check if possible
         for (let x of Xs) {
             for (let y of Ys) {
-                if (!this.isTileAvailable(x, y))
+                try {
+                    if (!this.isTileAvailable(x, y))
+                        return false
+                } catch {
                     return false
+                }
             }
         }
         return true
@@ -174,8 +185,12 @@ export default class Wall {
     }
 
     enter () {
+        console.log(this.backgrounds, this.backgrounds[this.room.phase])
+        if (this.backgrounds[this.room.phase]) {
+            this.backgroundSprite = this.game.add.sprite(UIConfig.sceneGrid.positionCenter[0], UIConfig.sceneGrid.positionCenter[1], this.backgrounds[this.room.phase])
+        }
+
         this.getFurnitures().forEach(furniture => {
-            console.log('Adding sprite', furniture, 'at pos', UIConfig.sceneGrid.tileToPixel(...this.findFurniturePosition(furniture)))
             let [x, y] = UIConfig.sceneGrid.tileToPixel(this.findFurniturePosition(furniture)[0],
                                                         this.findFurniturePosition(furniture)[1] + furniture.sizeY - 1,
                                                         this.sizeX, this.sizeY)
@@ -221,6 +236,10 @@ export default class Wall {
     }
 
     exit() {
+        if (this.backgroundSprite) {
+            this.backgroundSprite.destroy()
+            this.backgroundSprite = undefined
+        }
         this.sprites.forEach(sprite => {
             sprite.destroy()
         })

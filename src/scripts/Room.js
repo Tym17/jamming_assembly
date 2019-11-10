@@ -6,6 +6,7 @@ export default class Room {
         this.phase = 'neutral'
         this.allFurnitures = allFurnitures
         this.validated = false
+        this.walls.forEach(wall => wall.setRoom(this))
     }
 
     static phases () {

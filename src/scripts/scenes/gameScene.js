@@ -74,11 +74,52 @@ export default class GameScene extends Phaser.Scene {
                 inventory: 'assets/img/sprites/skorjund.png'
             }
         });
+        this.addfurniture({
+            name: 'fatbourey',
+            sizeX: 2, sizeY: 2,
+            placeableOnWall: true,
+            images: {
+                neutral: 'assets/img/sprites/skorjund_fat.png',
+                good: 'assets/img/sprites/skorjund_fat.png',
+                bad: 'assets/img/sprites/skorjund_fat.png',
+                very_bad: 'assets/img/sprites/skorjund_fat.png',
+                inventory: 'assets/img/sprites/skorjund.png'
+            }
+        });
+        this.addfurniture({
+            name: 'desk',
+            sizeX: 4, sizeY: 3,
+            placeableOnWall: false,
+            images: {
+                neutral: 'assets/img/sprites/furnitures/desk_neutral.png',
+                good: 'assets/img/sprites/furnitures/desk_neutral.png',
+                bad: 'assets/img/sprites/furnitures/desk_neutral.png',
+                very_bad: 'assets/img/sprites/furnitures/desk_neutral.png',
+                inventory: 'assets/img/sprites/skorjund.png'
+            }
+        });
 
         this.load.image('arrow_right', 'assets/img/sprites/arrow_right.png')
         this.load.image('arrow_left', 'assets/img/sprites/arrow_left.png')
 
         this.load.image('door', 'assets/img/sprites/door.png')
+
+        this.load.image('living_room_0_neutral', 'assets/img/sprites/rooms/salon_face.png')
+        this.load.image('living_room_1_neutral', 'assets/img/sprites/rooms/salon_gauche.png')
+        this.load.image('living_room_2_neutral', 'assets/img/sprites/rooms/salon_bas.png')
+        this.load.image('living_room_3_neutral', 'assets/img/sprites/rooms/salon_droite_nodoor.png')
+
+        this.load.image('library_0_neutral', 'assets/img/sprites/rooms/bibliotheque_face.png')
+        this.load.image('library_1_neutral', 'assets/img/sprites/rooms/bibliotheque_porte.png')
+
+        this.load.image('bathroom_0_neutral', 'assets/img/sprites/rooms/sdb_face.png')
+
+        this.load.image('bedroom_0_neutral', 'assets/img/sprites/rooms/chambre_face.png')
+        this.load.image('bedroom_1_neutral', 'assets/img/sprites/rooms/chambre_porte.png')
+
+        this.load.image('kitchen_0_neutral', 'assets/img/sprites/rooms/cuisine_face.png')
+        this.load.image('kitchen_1_neutral', 'assets/img/sprites/rooms/cuisine_porte.png')
+
 
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
@@ -124,6 +165,7 @@ export default class GameScene extends Phaser.Scene {
 
         this.player.addToInventory(this.furnitureList['tabourey'])
         this.player.addToInventory(this.furnitureList['fatbourey'])
+        this.player.addToInventory(this.furnitureList['desk'])
         
         console.log('Gamescene started');
 

@@ -7,7 +7,7 @@ const sceneGridPositionBottomLeft = (x, y) => ([SCENE_GRID_POS_X - (x / 2) * SCE
 const sceneGridTileToPixel = (x, y, maxX=13, maxY=8) => ([sceneGridPositionBottomLeft(maxX, maxY)[0] + x * SCENE_GRID_TILESIZE,
                                                           sceneGridPositionBottomLeft(maxX, maxY)[1] - y * SCENE_GRID_TILESIZE])
 
-const INVENTORY_GRID_TILESIZE = 96
+const INVENTORY_GRID_TILESIZE = 192
 const INVENTORY_GRID_POS_X = 1609
 const INVENTORY_GRID_POS_Y = 564
 

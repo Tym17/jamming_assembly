@@ -6,36 +6,85 @@ export default class House {
         this.player = undefined
         this.rooms = {
             living_room: {room: new Room(game, allFurnitures, [
-                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}, doors: [
-                    {x: 0, y: 0, onClick: (() => { this.player.move('kitchen') })}
-                ]}),
-                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}, doors: [
-                    {x: 0, y: 0, onClick: (() => { this.player.move('bathroom') })}
-                ]}),
-                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
-                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}})
-            ]), unlockAtLevel: 0, links: ['kitchen', 'bathroom', 'bedroom', 'library']},
+                new Wall(game, allFurnitures, {
+                    sizeX: 11, sizeY: 8,
+                    correctFurniturePositions: {},
+                    doors: [{x: 0, y: 0, onClick: (() => { this.player.move('kitchen') })}],
+                    backgrounds: {'good': 'living_room_0_neutral', 'neutral': 'living_room_0_neutral', 'bad': 'living_room_0_neutral', 'very_bad': 'living_room_0_neutral'}}),
+                new Wall(game, allFurnitures, {
+                    sizeX: 11, sizeY: 8,
+                    correctFurniturePositions: {},
+                    doors: [{x: 0, y: 0, onClick: (() => { this.player.move('bathroom') })}],
+                    backgrounds: {'good': 'living_room_1_neutral', 'neutral': 'living_room_1_neutral', 'bad': 'living_room_1_neutral', 'very_bad': 'living_room_1_neutral'}}),
+                new Wall(game, allFurnitures, {
+                    sizeX: 11, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'living_room_2_neutral', 'neutral': 'living_room_2_neutral', 'bad': 'living_room_2_neutral', 'very_bad': 'living_room_2_neutral'}}),
+                new Wall(game, allFurnitures, {
+                    sizeX: 11, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'living_room_3_neutral', 'neutral': 'living_room_3_neutral', 'bad': 'living_room_3_neutral', 'very_bad': 'living_room_3_neutral'}}),
+                ]),
+                unlockAtLevel: 0,
+                links: ['kitchen', 'bathroom', 'bedroom', 'library']},
+            
             kitchen: {room: new Room(game, allFurnitures, [
-                new Wall(game, allFurnitures, {sizeX: 9, sizeY: 8, correctFurniturePositions: {}, doors: [
-                    {x: 0, y: 0, onClick: (() => { this.player.move('living_room') })}
-                ]}),
-                new Wall(game, allFurnitures, {sizeX: 9, sizeY: 8, correctFurniturePositions: {}}),
-            ]), unlockAtLevel: 0, links: ['living_room']},
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    doors: [{x: 0, y: 0, onClick: (() => { this.player.move('living_room') })}],
+                    backgrounds: {'good': 'kitchen_0_neutral', 'neutral': 'kitchen_0_neutral', 'bad': 'kitchen_0_neutral', 'very_bad': 'kitchen_0_neutral'}}),
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'kitchen_1_neutral', 'neutral': 'kitchen_1_neutral', 'bad': 'kitchen_1_neutral', 'very_bad': 'kitchen_1_neutral'}}),
+                ]),
+                unlockAtLevel: 0,
+                links: ['living_room']},
+
             bathroom: {room: new Room(game, allFurnitures, [
-                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}, doors: [
-                    {x: 0, y: 0, onClick: (() => { this.player.move('living_room') })}
-                ]}),
-                new Wall(game, allFurnitures, {sizeX: 11, sizeY: 8, correctFurniturePositions: {}}),
-            ]), unlockAtLevel: 0, links: ['living_room']},
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'bathroom_0_neutral', 'neutral': 'bathroom_0_neutral', 'bad': 'bathroom_0_neutral', 'very_bad': 'bathroom_0_neutral'}}),
+                ]),
+                unlockAtLevel: 0,
+                links: ['living_room']},
+
             bedroom: {room: new Room(game, allFurnitures, [
-                new Wall(game, allFurnitures, {sizeX: 9, sizeY: 8, correctFurniturePositions: {}}),
-                new Wall(game, allFurnitures, {sizeX: 9, sizeY: 8, correctFurniturePositions: {}}),
-            ]), unlockAtLevel: 1, links: ['living_room']},
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'bedroom_0_neutral', 'neutral': 'bedroom_0_neutral', 'bad': 'bedroom_0_neutral', 'very_bad': 'bedroom_0_neutral'}}),
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'bedroom_1_neutral', 'neutral': 'bedroom_1_neutral', 'bad': 'bedroom_1_neutral', 'very_bad': 'bedroom_1_neutral'}}),
+                ]),
+                unlockAtLevel: 1,
+                links: ['living_room']},
+
             library: {room: new Room(game, allFurnitures, [
-                new Wall(game, allFurnitures, {sizeX: 9, sizeY: 8, correctFurniturePositions: {}}),
-                new Wall(game, allFurnitures, {sizeX: 9, sizeY: 8, correctFurniturePositions: {}}),
-            ]), unlockAtLevel: 2, links: ['living_room', 'garden']},
-            garden: {room: new Room(game, allFurnitures, []), unlockAtLevel: 3, links: ['library']}
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'library_0_neutral', 'neutral': 'library_0_neutral', 'bad': 'library_0_neutral', 'very_bad': 'library_0_neutral'}}),
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'library_1_neutral', 'neutral': 'library_1_neutral', 'bad': 'library_1_neutral', 'very_bad': 'library_1_neutral'}}),
+                ]),
+                unlockAtLevel: 2,
+                links: ['living_room', 'garden']},
+
+            garden: {room: new Room(game, allFurnitures, [
+                new Wall(game, allFurnitures, {
+                    sizeX: 9, sizeY: 8,
+                    correctFurniturePositions: {},
+                    backgrounds: {'good': 'garden', 'neutral': 'garden', 'bad': 'garden', 'very_bad': 'garden'}}),
+            ]),
+                unlockAtLevel: 3,
+                links: ['library']}
         }
         this.level = 0
     }
