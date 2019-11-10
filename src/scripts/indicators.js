@@ -33,6 +33,8 @@ export default class Indicators {
     goingToBed;
     transitionning;
 
+    continueGame;
+
     constructor(_game) {
         this.game = _game;
 
@@ -43,6 +45,7 @@ export default class Indicators {
 
         this.goingToBed = false;
         this.transitionning = false;
+        this.continueGame = true;
 
         this.eyeTirednessNames = [
             'open',
@@ -57,11 +60,11 @@ export default class Indicators {
 
         this.sunLevel = 2;
         this.activeSunSprite = undefined;
-        
+
         this.tiredLevel = 0;
         this.crazyLevel = 0;
         this.activeEyeSprite = undefined;
-        
+
         /* Debug rect
         this.game.add.rectangle(
             OFFSET_INV_X, OFFSET_INV_Y,
@@ -99,9 +102,13 @@ export default class Indicators {
         if (tiredness === 3) {
             tiredness = 2;
         }
-        craziness = 2 - Math.trunc(craziness / 34);
+        craziness = 2 - Math.trunc((craziness * 3) / 100);
+        if (craziness < 0) {
+            craziness = 0;
+        }
+        console.log('crazyness', craziness);
 
-        if (this.tiredLevel !== tiredness 
+        if (this.tiredLevel !== tiredness
             || this.CrazyLevel !== craziness) {
             console.log('eye levels', tiredness, craziness);
             this.tiredLevel = tiredness;
@@ -113,7 +120,7 @@ export default class Indicators {
     getEyeSprite() {
         if (this.tiredLevel === 2) {
             return 'eye_closed';
-        } 
+        }
 
         return `eye_${this.eyeTirednessNames[this.tiredLevel]}_${this.eyeCrazinessNames[this.crazyLevel]}`;
     }
@@ -152,9 +159,10 @@ export default class Indicators {
         bg.setDepth(-1);
     }
 
-    nightTime() {
+    nightTime(continueGame) {
         this.transitionning = true;
         this.goingToBed = true;
+        this.continueGame = continueGame;
     }
 
     update(time, delta) {
@@ -167,6 +175,9 @@ export default class Indicators {
                     this.goingToBed = false;
                 }
             } else {
+                if (!this.continueGame) {
+                    this.game.scene.start('OverScene');
+                }
                 this.sleepOverlay.setAlpha(alpha - (delta * SLEEPING_SPEED));
                 if (this.sleepOverlay.alpha <= 0) {
                     this.sleepOverlay.alpha = 0;

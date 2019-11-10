@@ -184,8 +184,6 @@ export default class GameScene extends Phaser.Scene {
                 
         this.player.create();
 
-        console.log('Gamescene started');
-
         this.input.on('pointerdown', event => {
             console.log(event.position)
             UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)

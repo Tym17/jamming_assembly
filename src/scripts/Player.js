@@ -3,11 +3,11 @@ import NotesInventory from './notesInventory'
 import UIConfig from "./UIConfig"
 import Indicators from "./indicators"
 
-const DAY_LENGTH = 1.5 * 60 * 1000;
+const DAY_LENGTH = 0.15 * 60 * 1000;
 const DAY_PART = DAY_LENGTH / 3;
 
 export default class Player {
-    constructor (game, allFurnitures, house) {
+    constructor(game, allFurnitures, house) {
         this.game = game
         this.house = house
         this.house.setPlayer(this)
@@ -25,7 +25,7 @@ export default class Player {
         this.currentlyDragging = undefined
         this.hud = new Indicators(game);
         this.timeInDayInMs = 0;
-        
+
         game.input.on('pointermove', pointer => {
             if (this.currentlyDragging) {
                 const wall = this.house.getRoom(this.currentRoom).walls[this.currentWall]
@@ -33,8 +33,8 @@ export default class Player {
                 let clampedTilePos = [...tilePos]
                 if (clampedTilePos[0] < 0) clampedTilePos[0] = 0
                 if (clampedTilePos[1] < 0) clampedTilePos[1] = 0
-                if (clampedTilePos[0] + this.currentlyDragging.furniture.sizeX >= wall.sizeX) clampedTilePos[0] = wall.sizeX - this.currentlyDragging.furniture.sizeX 
-                if (clampedTilePos[1] + this.currentlyDragging.furniture.sizeY >= wall.sizeY) clampedTilePos[1] = wall.sizeY - this.currentlyDragging.furniture.sizeX 
+                if (clampedTilePos[0] + this.currentlyDragging.furniture.sizeX >= wall.sizeX) clampedTilePos[0] = wall.sizeX - this.currentlyDragging.furniture.sizeX
+                if (clampedTilePos[1] + this.currentlyDragging.furniture.sizeY >= wall.sizeY) clampedTilePos[1] = wall.sizeY - this.currentlyDragging.furniture.sizeX
                 // Cannot place => red tint
                 if (!house.getRoom(this.currentRoom).walls[this.currentWall].canAddFurniture(this.currentlyDragging.furniture, tilePos[0], tilePos[1])) {
                     this.currentlyDragging.sprite.tint = 0xFF0000
@@ -72,7 +72,7 @@ export default class Player {
         this.hud.create();
     }
 
-    addToInventory (furniture) {
+    addToInventory(furniture) {
         this.inventory.push({
             sprite: undefined,
             furniture: furniture
@@ -81,7 +81,7 @@ export default class Player {
         this._refreshInventory()
     }
 
-    _refreshInventory () {
+    _refreshInventory() {
         this.inventory.filter(invElem => invElem.sprite).forEach(elem => {
             elem.sprite.destroy()
             elem.sprite = undefined
@@ -95,17 +95,17 @@ export default class Player {
             this.inventoryArrowRight = undefined
         }
         this.inventory
-        .slice(this.inventoryPage * 6, (this.inventoryPage + 1) * 6)
-        .forEach((elem, idx) => {
-            const pixelPos = UIConfig.inventoryGrid.tileToPixel(idx % 2, ~~(idx / 2), 2, 3)
-            elem.sprite = this.game.add.sprite(pixelPos[0], pixelPos[1], elem.furniture.getInventoryImage())
-            elem.sprite.setInteractive();
-            elem.sprite.on('pointerdown', (event) => {
-                console.log(event)
-                if (this.currentlyDragging) { return ;}
-                this._takeFromInventoryToDragging(elem, event.position.x, event.position.y);
-            });
-        })
+            .slice(this.inventoryPage * 6, (this.inventoryPage + 1) * 6)
+            .forEach((elem, idx) => {
+                const pixelPos = UIConfig.inventoryGrid.tileToPixel(idx % 2, ~~(idx / 2), 2, 3)
+                elem.sprite = this.game.add.sprite(pixelPos[0], pixelPos[1], elem.furniture.getInventoryImage())
+                elem.sprite.setInteractive();
+                elem.sprite.on('pointerdown', (event) => {
+                    console.log(event)
+                    if (this.currentlyDragging) { return; }
+                    this._takeFromInventoryToDragging(elem, event.position.x, event.position.y);
+                });
+            })
 
         const posLeft = UIConfig.inventoryGrid.tileToPixel(0, 2.8, 2, 3)
         this.inventoryArrowLeft = this.game.add.sprite(posLeft[0], posLeft[1], 'arrow_left')
@@ -132,14 +132,14 @@ export default class Player {
         }
     }
 
-    _destroyCurrentlyDragging () {
+    _destroyCurrentlyDragging() {
         if (this.currentlyDragging) {
             this.currentlyDragging.sprite.destroy()
             this.currentlyDragging = undefined
         }
     }
 
-    _addCurrentlyDraggingToInventory () {
+    _addCurrentlyDraggingToInventory() {
         if (this.currentlyDragging) {
             this.inventory.unshift({ // Push at front
                 furniture: this.currentlyDragging.furniture,
@@ -150,7 +150,7 @@ export default class Player {
         this._refreshInventory()
     }
 
-    _takeFromInventoryToDragging (elem, mousePosX=0, mousePosY=0) {
+    _takeFromInventoryToDragging(elem, mousePosX = 0, mousePosY = 0) {
         if (!this.currentlyDragging) {
             this.currentlyDragging = {
                 furniture: elem.furniture,
@@ -163,7 +163,7 @@ export default class Player {
         }
     }
 
-    _enterWall () {
+    _enterWall() {
         console.log('Entering wall')
         const wall = this.house.getRoom(this.currentRoom).walls[this.currentWall]
         wall.printTiles()
@@ -184,11 +184,27 @@ export default class Player {
         })
     }
 
-    _exitWall () {
+    _exitWall() {
         this.house.getRoom(this.currentRoom).walls[this.currentWall].exit()
     }
 
-    move (to, wall=0) {
+    checkHealth() {
+        const roomPhase = this.house.getRoom(this.currentRoom).phase
+        console.log(this.currentRoom);
+        console.error(roomPhase);
+        if (roomPhase == 'good') {
+            this.takeDamage(-5)
+        }
+        if (roomPhase == 'bad' || roomPhase == 'very_bad') {
+            this.takeDamage(5)
+            this.energy -= this.energyUsedByBadRoom
+            if (roomPhase == 'very_bad') {
+                this.takeDamage(5)
+            }
+        }
+    }
+
+    move(to, wall = 0) {
         console.log('trying to move')
         if (this.house.canTransition(this.currentRoom, to)) {
             this.energy -= this.energyUsedByWalking
@@ -196,17 +212,7 @@ export default class Player {
             this.currentRoom = to
             this.currentWall = wall
             this._enterWall()
-            const roomPhase = this.house.getRoom(this.currentRoom).phase
-            if (roomPhase == 'good') {
-                this.takeDamage(-5)
-            }
-            if (roomPhase == 'bad' || roomPhase == 'very_bad') {
-                this.takeDamage(5)
-                this.energy -= this.energyUsedByBadRoom
-                if (roomPhase == 'very_bad') {
-                    this.takeDamage(5)
-                }
-            }
+            this.checkHealth();
             this.checkEndOfDay()
             console.log('move success')
             this.hud.updateEye(this.energy, this.mentalHealth);
@@ -216,7 +222,7 @@ export default class Player {
         return false
     }
 
-    placeFurniture (furniture, x, y) {
+    placeFurniture(furniture, x, y) {
         if (this.house.getRoom(this.currentRoom).walls[this.currentWall].tryToAddFurniture(furniture, x, y)) {
             this.energy -= this.energyUsedByPlacing
             this.checkEndOfDay();
@@ -231,36 +237,37 @@ export default class Player {
         return this.house.getRoom(this.currentRoom).walls[this.currentWall].tryToRemoveFurniture(furniture)
     }
 
-    rotateRight () {
+    rotateRight() {
         console.log('Rotating right')
         this._exitWall()
         this.currentWall = this.house.getRoom(this.currentRoom).previousWall(this.currentWall)
         this._enterWall()
     }
 
-    rotateLeft () {
+    rotateLeft() {
         console.log('Rotating left')
         this._exitWall()
         this.currentWall = this.house.getRoom(this.currentRoom).nextWall(this.currentWall)
         this._enterWall()
     }
 
-    checkEndOfDay () {
+    checkEndOfDay() {
         if (this.energy <= 0 || this.timeInDayInMs > DAY_LENGTH) { // TODO: OR TIMEOUT
             this.sleep()
         }
     }
 
-    sleep () {
-        console.log('Sleeping')
+    sleep() {
+        console.log('Sleeping', this.mentalHealth);
         this.house.performMutations()
+        this.checkHealth();
         this.energy = this.energyPerDay
         this.hud.updateEye(this.energy, this.mentalHealth)
-        this.hud.nightTime();
+        this.hud.nightTime(true);
         this.timeInDayInMs = 0;
     }
 
-    takeDamage (damage) {
+    takeDamage(damage) {
         this.mentalHealth -= damage
         if (this.mentalHealth >= 100) this.mentalHealth = 100
         if (this.mentalHealth <= 0) {
@@ -268,11 +275,12 @@ export default class Player {
             return;
         }
 
+        console.log('took dmg', this.mentalHealth);
         this.hud.updateEye(this.energy, this.mentalHealth);
     }
 
-    gameOver () {
-        console.error('GAME OVER') // TODO
+    gameOver() {
+        this.hud.nightTime(false);
     }
 
     update(time, delta) {
