@@ -2,6 +2,7 @@ import Wall from '../Wall';
 import Furniture from '../Furniture';
 import House from '../House';
 import Player from '../Player';
+import UIConfig from '../UIConfig';
 
 const CELL_SIZE = 96;
 const GRID_WIDTH = 1248;
@@ -40,8 +41,6 @@ export default class GameScene extends Phaser.Scene {
         this.roomSprites = [];
         this.invSprites = [];
         this.pickUp = '';
-        this.house = new House(this, this.furnitureList)
-        this.player = new Player(this, this.furnitureList, this.house);
     }
 
     addfurniture(furniture) {
@@ -80,69 +79,6 @@ export default class GameScene extends Phaser.Scene {
         console.log('furniture lib', this.furnitureList);
     }
 
-    loadWallSprites(wall) {
-        this.roomSprites.forEach(f => f.destroy());
-        let furnitures = wall.getFurnitures();
-        console.log('loading wall furnitures...', furnitures);
-
-        furnitures.forEach(item => {
-            let furniture = this.add.sprite(OFFSETGRID_WIDTH + (item.pos.x * CELL_SIZE),
-                OFFSETGRID_HEIGTH + (item.pos.y * CELL_SIZE), item.image);
-            furniture.setDisplayOrigin(0, 0);
-            furniture.setInteractive();
-            furniture.name = item.name;
-            furniture.on('pointerdown', () => {
-                if (this.pickUp !== '') { return ;}
-                this.pickUp = item.name;
-                this.roomSprites = this.roomSprites
-                    .filter(f => f.name != item.name);
-                wall.tryToRemoveFurniture(this.furnitureList[this.pickUp]);
-                furniture.destroy();
-                this.pickedSprite = this.add.sprite(OFFSETGRID_WIDTH + (item.pos.x * CELL_SIZE),
-                    OFFSETGRID_HEIGTH + (item.pos.y * CELL_SIZE),
-                    this.furnitureList[item.name].getInventoryImage());
-            });
-            this.roomSprites.push(furniture);
-
-        });
-    }
-
-    loadInventorySprites() {
-        if (this.inventoryPage * INV_PAGESIZE > this.inventory.length) {
-            console.error('Trying to show a page further than the inventoryt capacity');
-            return;
-        }
-
-        this.invSprites.forEach(f => f.destroy());
-        let invPage = this.inventory.slice(this.inventoryPage * INV_PAGESIZE);
-
-        for (let i = 0; i < INV_PAGESIZE; i++) {
-            if (invPage[i] === undefined) { break; }
-            let modi = i % 2
-            let y = modi == 1 ? i - 1 : i;
-            let pos = {
-                x: OFFSETINV_WIDTH + (modi * CELL_SIZE * 2),
-                y: OFFSETINV_HEIGTH + (y * CELL_SIZE)
-            };
-            let invElem = this.add.sprite(pos.x, pos.y,
-                this.furnitureList[invPage[i]].getInventoryImage());
-            invElem.setDisplayOrigin(0, 0);
-            invElem.name = invPage[i];
-            invElem.setInteractive();
-            invElem.on('pointerdown', () => {
-                if (this.pickUp !== '') { return ;}
-                this.pickUp = invElem.name;
-                this.inventory = this.inventory
-                    .filter(it => it != invPage[i]);
-                this.loadInventorySprites();
-                this.pickedSprite = this.add.sprite(pos.x, pos.y,
-                    this.furnitureList[invPage[i]].getInventoryImage());
-            });
-            this.invSprites.push(invElem);
-        }
-
-    }
-
     /**
      * 
      * @param {x, y} pos 
@@ -154,60 +90,53 @@ export default class GameScene extends Phaser.Scene {
     }
 
     create() {
-        console.log('Gamescene started');
-        this.debugGrid = this.add.grid(POSGRID_X,
-            POSGRID_Y,
-            GRID_WIDTH, GRID_HEIGTH,
-            CELL_SIZE, CELL_SIZE,
+        this.debugGrid = this.add.grid(
+            UIConfig.sceneGrid.positionCenter[0],
+            UIConfig.sceneGrid.positionCenter[1],
+            UIConfig.sceneGrid.size(13, 8)[0], UIConfig.sceneGrid.size(13, 8)[1],
+            UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize,
             0xcacaca, 1, 0x0000FF);
 
-        this.add.grid(INV_X, INV_Y,
-            INV_WIDTH, INV_HEIGHT,
-            CELL_SIZE * 2, CELL_SIZE * 2,
-            0xcacaca, 1, 0xFF0000);
-            
-        this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['tabourey'], 0, 0)
-        this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['fatbourey'], 3, 0)
+            this.add.grid(
+                UIConfig.inventoryGrid.positionCenter[0],
+                UIConfig.inventoryGrid.positionCenter[1],
+                UIConfig.inventoryGrid.size(2, 3)[0], UIConfig.inventoryGrid.size(2, 3)[1],
+                UIConfig.inventoryGrid.tileSize, UIConfig.inventoryGrid.tileSize,
+                0xcacaca, 1, 0x0000FF);
 
+        console.log(UIConfig.sceneGrid.positionBottomLeft(13, 8)[0],
+        UIConfig.sceneGrid.positionBottomLeft(13, 8)[1] - 8 * UIConfig.sceneGrid.tileSize,
+        UIConfig.sceneGrid.size(13, 8)[0], UIConfig.sceneGrid.size(13, 8)[1],
+        UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize,
+        0xcacaca, 1, 0x0000FF)
+
+        // this.add.grid(INV_X, INV_Y,
+        //     INV_WIDTH, INV_HEIGHT,
+        //     CELL_SIZE * 2, CELL_SIZE * 2,
+        //     0xcacaca, 1, 0xFF0000);
+
+        this.house = new House(this, this.furnitureList)
+
+        // this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['tabourey'], 0, 0)
+        // this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['fatbourey'], 3, 1)
+
+        this.house.rooms.living_room.room.walls[1].tryToAddFurniture(this.furnitureList['tabourey'], 2, 5)
+
+        this.house.rooms.living_room.room.walls[2].tryToAddFurniture(this.furnitureList['fatbourey'], 4, 4)
+
+        this.house.rooms.living_room.room.walls[3].tryToAddFurniture(this.furnitureList['fatbourey'], 8, 2)
+
+        this.player = new Player(this, this.furnitureList, this.house);
+
+        this.player.addToInventory(this.furnitureList['tabourey'])
+        this.player.addToInventory(this.furnitureList['fatbourey'])
         
-        this.loadInventorySprites();
+        console.log('Gamescene started');
 
-        this.loadWallSprites(this.testWall);
-        this.input.on('pointermove', pointer => {
-            if (this.pickUp !== '') {
-                this.pickedSprite.x = pointer.x;
-                this.pickedSprite.y = pointer.y;
-            }
+        this.input.on('pointerdown', event => {
+            console.log(event.position)
+            UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)
         });
-        this.input.on('pointerup', pointer => {
-            if (this.pickUp !== '') {
-                let pos = {
-                    x: this.pickedSprite.x,
-                    y: this.pickedSprite.y
-                };
-                if (this.isInArea(pos, {
-                    pos: {x: OFFSETGRID_WIDTH, y: OFFSETGRID_HEIGTH},
-                    width: GRID_WIDTH, heigth: GRID_HEIGTH
-                })) {
-                    let localPos = {
-                        x: Math.trunc((pos.x - OFFSETGRID_WIDTH) / CELL_SIZE),
-                        y: Math.trunc((pos.y - OFFSETGRID_HEIGTH) / CELL_SIZE),
-                    };
-                    if (this.testWall.tryToAddFurniture(this.furnitureList[this.pickUp], 
-                        localPos.x, localPos.y)) {
-                            this.pickUp = '';
-                            this.pickedSprite.destroy();
-                            this.loadWallSprites(this.testWall);
-                        }
-                }
-                else {
-                    this.inventory.push(this.pickUp);
-                    this.pickUp = '';
-                    this.pickedSprite.destroy();
-                    this.loadInventorySprites();
-                }
-            }
-        })
     }
 
     update() {
