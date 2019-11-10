@@ -153,7 +153,6 @@ export default class Wall {
     }
 
     printTiles () {
-        console.log(this.tiles)
         this.tiles.forEach(row => {
             let str = ''
             row.forEach(tile => { // transposed
@@ -163,7 +162,6 @@ export default class Wall {
                     else str += 'X '
                 }
             })
-            console.log(str)
         });
     }
 
@@ -185,7 +183,6 @@ export default class Wall {
     }
 
     enter () {
-        console.log(this.backgrounds, this.backgrounds[this.room.phase])
         if (this.backgrounds[this.room.phase]) {
             this.backgroundSprite = this.game.add.sprite(UIConfig.sceneGrid.positionCenter[0], UIConfig.sceneGrid.positionCenter[1], this.backgrounds[this.room.phase])
         }

@@ -14,7 +14,7 @@ export default class Room {
         return ['bad', 'neutral', 'good']
     }
 
-    static validatePhaseName (phase) {
+    static validatePhaseName(phase) {
         if (Room.phases().indexOf(phase) == -1) {
             throw new Error(`${phase} is not a valid room phase name`)
         }
@@ -22,21 +22,21 @@ export default class Room {
 
     getAllCorrectFurnitures() {
         return this.walls
-        .map(wall => wall.getCorrectFurnitures())
-        .reduce((arr1, arr2) => arr1.concat(arr2), [])
+            .map(wall => wall.getCorrectFurnitures())
+            .reduce((arr1, arr2) => arr1.concat(arr2), [])
     }
 
-    getAllMisplacedFurnitures () {
+    getAllMisplacedFurnitures() {
         return this.walls
-        .map(wall => wall.getMisplacedFurnitures())
-        .reduce((arr1, arr2) => arr1.concat(arr2), [])
+            .map(wall => wall.getMisplacedFurnitures())
+            .reduce((arr1, arr2) => arr1.concat(arr2), [])
     }
 
-    getAllMissingFurnitures () {
+    getAllMissingFurnitures() {
         return this.walls
-        .map(wall => wall.getMissingFurnitures())
-        .reduce((arr1, arr2) => arr1.concat(arr2), [])
-        .filter(furnitureName => !this.getAllMisplacedFurnitures().includes(furnitureName))
+            .map(wall => wall.getMissingFurnitures())
+            .reduce((arr1, arr2) => arr1.concat(arr2), [])
+            .filter(furnitureName => !this.getAllMisplacedFurnitures().includes(furnitureName))
     }
 
     getAllFurnitures () {
@@ -50,13 +50,13 @@ export default class Room {
         .filter(f => f.phase == 'bad')
     }
 
-    _applyFurnituresMutations () {
+    _applyFurnituresMutations() {
         this.getAllMisplacedFurnitures()
-        .filter(_ => Math.random() <= Furniture.mutationProbability())
-        .forEach(name => {
-            console.log('Worsening furniture', name)
-            this.allFurnitures[name].worsen()
-        })
+            .filter(_ => Math.random() <= Furniture.mutationProbability())
+            .forEach(name => {
+                console.log('Worsening furniture', name)
+                this.allFurnitures[name].worsen()
+            })
 
         this.getAllCorrectFurnitures()
         .forEach(name => {
@@ -78,12 +78,13 @@ export default class Room {
     applyMutations () {
         this._applyFurnituresMutations()
         const theoreticalNbFurnitures = this.walls
-        .map(wall => Object.keys(wall.correctFurniturePositions).length)
-        .reduce((a, b) => a + b, [])
+            .map(wall => Object.keys(wall.correctFurniturePositions).length)
+            .reduce((a, b) => a + b, [])
 
         const errors = this.getAllMisplacedFurnitures().length + this.getAllMissingFurnitures().length
         const worsenProbability = errors / theoreticalNbFurnitures * 0.5
         if (Math.random() <= worsenProbability) {
+            console.info('auto worsen room', this.walls[0]);
             this.worsen()
         }
         if (Object.keys(this.getAllCorrectFurnitures()).length >= theoreticalNbFurnitures) {
@@ -97,11 +98,17 @@ export default class Room {
     worsen() {
         const phase = this.phase
         Room.validatePhaseName(this.phase)
-        this.phase = Room.phases()[Room.phases().indexOf(this.phase) - 1]
-        if (!this.phase) this.phase = phase
+        if (phase === 'neutral') {
+            this.phase = 'bad';
+        } else if (phase === 'good') {
+            this.phase = 'neutral';
+        }
+        console.log('phase is now', this.phase);
+        //if (!this.phase) this.phase = phase
     }
 
     improve() {
+        return; // TODO non
         const phase = this.phase
         Room.validatePhaseName(this.phase)
         this.phase = Room.phases()[Room.phases().indexOf(this.phase) + 1]
@@ -109,11 +116,11 @@ export default class Room {
     }
 
 
-    nextWall (wall) {
+    nextWall(wall) {
         return (wall + this.walls.length + 1) % this.walls.length
     }
 
-    previousWall (wall) {
+    previousWall(wall) {
         return (wall + this.walls.length - 1) % this.walls.length
     }
 };
