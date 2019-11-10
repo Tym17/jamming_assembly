@@ -9,7 +9,8 @@ const INV_HEIGHT = 97;
 const INV_X = OFFSET_INV_X + (INV_WIDTH / 2);
 const INV_Y = OFFSET_INV_Y + (INV_HEIGHT / 2);
 
-const NOTES_OFFSET_X = 42 + OFFSET_INV_X;
+const NOTES_INV_PADDING_X = 42;
+const NOTES_OFFSET_X = NOTES_INV_PADDING_X + OFFSET_INV_X;
 const NOTES_OFFSET_Y = 25 + OFFSET_INV_Y;
 const NOTES_SPACING = 23;
 const NOTE_SIZE = 45;
@@ -35,7 +36,7 @@ export default class NotesInventory {
         this.game.add.rectangle(INV_X, INV_Y,
             INV_WIDTH, INV_HEIGHT, 0xdadada);
 
-        this.overlay = this.game.add.rectangle(0, 0, 
+        this.overlay = this.game.add.rectangle(0, 0,
             VIEW_WIDTH, VIEW_HEIGHT, 0, 0.7
         );
         this.overlay.setDisplayOrigin(0, 0);
@@ -60,9 +61,9 @@ export default class NotesInventory {
     }
 
     unlockNote() {
-        if (this.noteLevel + 1 > NOTES_AMMOUNT) { 
+        if (this.noteLevel + 1 > NOTES_AMMOUNT) {
             console.error('Trying to unlock more notes than possible');
-            return; 
+            return;
         }
         let noteSprite = this.game.add.sprite(
             NOTES_OFFSET_X + (this.noteLevel * (NOTE_SIZE + NOTES_SPACING)), NOTES_OFFSET_Y,
@@ -90,15 +91,35 @@ export default class NotesInventory {
         this.detailedNoteSprite.on('pointerdown', this.unFocus);
     }
 
-    unlockBook()
-    {
+    openBook(that) {
+        return () => {
+            that.overlay.setVisible(true);
+            // TODO change sprite for the book's
+            that.detailedNoteSprite = that.game.add.sprite(
+                VIEW_WIDTH / 2, VIEW_HEIGHT / 2,
+                `note_${0}_details`
+            );
+            that.detailedNoteSprite.setDepth(OVERLAY_DEPTH + 1);
+            that.detailedNoteSprite.setInteractive();
+            that.detailedNoteSprite.on('pointerdown', that.unFocus);
+        };
+    }
+
+    unlockBook() {
         if (this.isBookUnlocked) {
             console.error('Book is already unlocked');
-            return ;
+            return;
         }
-
+        let bookSprite = this.game.add.rectangle(
+            NOTES_OFFSET_X + INV_WIDTH - NOTE_SIZE - (NOTES_INV_PADDING_X * 2),
+            NOTES_OFFSET_Y,
+            NOTE_SIZE, NOTE_SIZE, 0x00FF00 // TODO replace by book sprite
+        );
+        bookSprite.setDisplayOrigin(0, 0);
+        bookSprite.setInteractive();
+        bookSprite.on('pointerdown', this.openBook(this));
+        this.noteSprites.push(bookSprite);
         this.isBookUnlocked = true;
-        // TODO add book sprite and make it interactive
     }
 
 }

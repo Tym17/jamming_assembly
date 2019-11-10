@@ -72,6 +72,7 @@ export default class Player {
         this.notes.unlockNote();
         this.notes.unlockNote();
         this.notes.unlockNote();
+        this.notes.unlockBook();
     }
 
     addToInventory (furniture) {
