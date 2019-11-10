@@ -255,7 +255,7 @@ export default class Player {
         console.log('Sleeping')
         this.house.performMutations()
         this.energy = this.energyPerDay
-        this.house[this.currentRoom].checkNotes()
+        this.house.getRoom(this.currentRoom).checkNotes()
         this.hud.updateEye(this.energy, this.mentalHealth)
         this.hud.nightTime();
         this.timeInDayInMs = 0;
