@@ -321,8 +321,4 @@ export default class Player {
             this.game.musicPlayer.switchToNeutral()
         }
     }
-
-    say () {
-        this.
-    }
 }
