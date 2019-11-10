@@ -75,6 +75,9 @@ export default class GameScene extends Phaser.Scene {
             }
         });
 
+        this.load.image('arrow_right', 'assets/img/sprites/arrow_right.png')
+        this.load.image('arrow_left', 'assets/img/sprites/arrow_left.png')
+
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
     }

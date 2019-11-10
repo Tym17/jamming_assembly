@@ -43,7 +43,6 @@ export default class Player {
         });
 
         game.input.on('pointerup', pointer => {
-            console.log("AH", this.currentlyDragging)
             if (this.currentlyDragging) {
                 const wall = this.house.getRoom(this.currentRoom).walls[this.currentWall]
                 const tilePos = UIConfig.sceneGrid.pixelToTile(pointer.x, pointer.y, wall.sizeX, wall.sizeY)
@@ -127,15 +126,22 @@ export default class Player {
 
     _enterWall () {
         console.log('Entering wall')
-        this.house.getRoom(this.currentRoom).walls[this.currentWall].printTiles()
-        this.house.getRoom(this.currentRoom).walls[this.currentWall].enter()
-        this.house.getRoom(this.currentRoom).walls[this.currentWall].onSpriteClick((event, sprite, furniture) => {
+        const wall = this.house.getRoom(this.currentRoom).walls[this.currentWall]
+        wall.printTiles()
+        wall.enter()
+        wall.onSpriteClick((event, sprite, furniture) => {
             if (this.currentlyDragging) return
             this.currentlyDragging = {
                 furniture,
                 sprite
             }
             this.takeFurniture(furniture)
+        })
+        wall.onArrowLeft(() => {
+            this.rotateLeft()
+        })
+        wall.onArrowRight(() => {
+            this.rotateRight()
         })
     }
 
@@ -179,12 +185,14 @@ export default class Player {
     }
 
     rotateRight () {
+        console.log('Rotating right')
         this._exitWall()
         this.currentWall = this.house.getRoom(this.currentRoom).nextWall(this.currentWall)
         this._enterWall()
     }
 
     rotateLeft () {
+        console.log('Rotating left')
         this._exitWall()
         this.currentWall = this.house.getRoom(this.currentRoom).previousWall(this.currentWall)
         this._enterWall()

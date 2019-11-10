@@ -16,12 +16,24 @@ export default class Wall {
         this.unusablePositions = unusablePositions
         this.correctFurniturePositions = correctFurniturePositions
         this.sprites = []
+        this.arrowLeft = undefined
+        this.arrowLeftCB = () => {}
+        this.arrowRight = undefined
+        this.arrowRightCB = () => {}
         this.resetTiles()
         this.spriteClickCB = () => {}
     }
 
     onSpriteClick(cb) {
         this.spriteClickCB = cb
+    }
+
+    onArrowRight(cb) {
+        this.arrowRightCB = cb
+    }
+
+    onArrowLeft(cb) {
+        this.arrowLeftCB = cb
     }
 
     resetTiles () {
@@ -178,6 +190,22 @@ export default class Wall {
 
             this.sprites.push(sprite)
         })
+        this.arrowLeft = this.game.add.sprite(UIConfig.sceneGrid.positionBottomLeft(this.sizeX, this.sizeY)[0] - UIConfig.sceneGrid.tileSize,
+                                              UIConfig.sceneGrid.positionCenter[1],
+                                              'arrow_left')
+        this.arrowLeft.setInteractive();
+        this.arrowLeft.on('pointerdown', (event) => {
+            this.arrowLeftCB(event)
+        });
+
+        this.arrowRight = this.game.add.sprite(UIConfig.sceneGrid.positionBottomLeft(this.sizeX, this.sizeY)[0] + UIConfig.sceneGrid.tileSize * (this.sizeX + 1),
+                                               UIConfig.sceneGrid.positionCenter[1],
+                                               'arrow_right')
+        this.arrowRight.setInteractive();
+        this.arrowRight.on('pointerdown', (event) => {
+            this.arrowRightCB(event)
+        });
+
     }
 
     exit() {
@@ -185,5 +213,9 @@ export default class Wall {
             sprite.destroy()
         })
         this.sprites = []
+        this.arrowRight.destroy()
+        this.arrowRight = undefined
+        this.arrowLeft.destroy()
+        this.arrowLeft = undefined
     }
 }
