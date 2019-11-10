@@ -3,6 +3,7 @@ import Furniture from '../Furniture';
 import House from '../House';
 import Player from '../Player';
 import UIConfig from '../UIConfig';
+import MusicPlayer from '../MusicPlayer';
 
 const CELL_SIZE = 96;
 const GRID_WIDTH = 1248;
@@ -120,29 +121,6 @@ export default class GameScene extends Phaser.Scene {
             })
         })
 
-        this.load.image('arrow_right', 'assets/img/sprites/arrow_right.png')
-        this.load.image('arrow_left', 'assets/img/sprites/arrow_left.png')
-        this.load.image('arrow_down', 'assets/img/sprites/arrow_down.png')
-
-        this.load.image('door', 'assets/img/sprites/door.png')
-        this.load.image('invisible_door', 'assets/img/sprites/invisible_door.png')
-
-        this.load.image('living_room_0_neutral', 'assets/img/sprites/rooms/salon_face.png')
-        this.load.image('living_room_1_neutral', 'assets/img/sprites/rooms/salon_gauche.png')
-        this.load.image('living_room_2_neutral', 'assets/img/sprites/rooms/salon_bas.png')
-        this.load.image('living_room_3_neutral', 'assets/img/sprites/rooms/salon_droite_nodoor.png')
-
-        this.load.image('library_0_neutral', 'assets/img/sprites/rooms/bibliotheque_face.png')
-        this.load.image('library_1_neutral', 'assets/img/sprites/rooms/bibliotheque_porte.png')
-
-        this.load.image('bathroom_0_neutral', 'assets/img/sprites/rooms/sdb_face.png')
-
-        this.load.image('bedroom_0_neutral', 'assets/img/sprites/rooms/chambre_face.png')
-        this.load.image('bedroom_1_neutral', 'assets/img/sprites/rooms/chambre_porte.png')
-
-        this.load.image('kitchen_0_neutral', 'assets/img/sprites/rooms/cuisine_face.png')
-        this.load.image('kitchen_1_neutral', 'assets/img/sprites/rooms/cuisine_porte.png')
-
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
         
@@ -164,22 +142,9 @@ export default class GameScene extends Phaser.Scene {
         && (pos.y >= area.pos.y && pos.y <= area.pos.y + area.heigth));
     }
     
-    create() {        
-        this.debugGrid = this.add.grid(
-            UIConfig.sceneGrid.positionCenter[0],
-            UIConfig.sceneGrid.positionCenter[1],
-            UIConfig.sceneGrid.size(13, 8)[0], UIConfig.sceneGrid.size(13, 8)[1],
-            UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize,
-            0xcacaca, 1, 0x0000FF);
-            
-        this.add.grid(
-            UIConfig.inventoryGrid.positionCenter[0],
-            UIConfig.inventoryGrid.positionCenter[1],
-            UIConfig.inventoryGrid.size(2, 3)[0], UIConfig.inventoryGrid.size(2, 3)[1],
-            UIConfig.inventoryGrid.tileSize, UIConfig.inventoryGrid.tileSize,
-            0xcacaca, 1, 0x0000FF);
-                
+    create() {
         this.player.create();
+        this.musicPlayer = new MusicPlayer(this)
 
         this.input.on('pointerdown', event => {
             console.log(event.position)

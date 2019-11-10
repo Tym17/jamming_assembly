@@ -220,6 +220,7 @@ export default class Player {
             this.checkEndOfDay()
             console.log('move success')
             this.hud.updateEye(this.energy, this.mentalHealth);
+            this.updateMusic()
             return true
         }
         console.log('move failed')
@@ -277,6 +278,7 @@ export default class Player {
         this.hud.updateEye(this.energy, this.mentalHealth)
         this.hud.nightTime(true);
         this.timeInDayInMs = 0;
+        this.updateMusic()
     }
 
     takeDamage(damage) {
@@ -303,5 +305,24 @@ export default class Player {
         this.timeInDayInMs += delta;
         this.hud.updateSun((this.timeInDayInMs * 3) / DAY_LENGTH);
         this.checkEndOfDay();
+    }
+
+    updateMusic () {
+        if (this.house.getRoom(this.currentRoom).phase == 'good') {
+            this.game.musicPlayer.switchToGood()
+        }
+        else if (this.house.getRoom(this.currentRoom).phase == 'bad') {
+            this.game.musicPlayer.switchToVeryBad()
+        }
+        else if (this.house.getRoom(this.currentRoom).getBadFurnitures().length > 0) {
+            this.game.musicPlayer.switchToBad()
+        }
+        else {
+            this.game.musicPlayer.switchToNeutral()
+        }
+    }
+
+    say () {
+        this.
     }
 }

@@ -39,10 +39,15 @@ export default class Room {
             .filter(furnitureName => !this.getAllMisplacedFurnitures().includes(furnitureName))
     }
 
-    getAllPresentFurnitures() {
+    getAllFurnitures () {
         return this.walls
-            .map(wall => wall.getPresentFurnitures())
-            .reduce((arr1, arr2) => arr1.concat(arr2), [])
+        .map(wall => wall.getFurnitures())
+        .reduce((arr1, arr2) => arr1.concat(arr2), [])
+    }
+
+    getBadFurnitures () {
+        return this.getAllFurnitures()
+        .filter(f => f.phase == 'bad')
     }
 
     _applyFurnituresMutations() {
