@@ -51,7 +51,8 @@ export default class Wall {
         return !this.tiles[x][y].taken
     }
 
-    tryToAddFurniture (furniture, x, y) {
+    canAddFurniture(furniture, x, y) {
+        if (!furniture.placeableOnWall && y != 0) return false
         const Xs = new Array(furniture.sizeX).fill(0).map((_, i) => x + i)
         const Ys = new Array(furniture.sizeY).fill(0).map((_, i) => y + i)
         // Check if possible
@@ -59,8 +60,15 @@ export default class Wall {
             for (let y of Ys) {
                 if (!this.isTileAvailable(x, y))
                     return false
-            }    
+            }
         }
+        return true
+    }
+
+    tryToAddFurniture (furniture, x, y) {
+        const Xs = new Array(furniture.sizeX).fill(0).map((_, i) => x + i)
+        const Ys = new Array(furniture.sizeY).fill(0).map((_, i) => y + i)
+        if (!this.canAddFurniture(furniture, x, y)) return false
         // Then actually fill the tiles
         for (let x of Xs) {
             for (let y of Ys) {

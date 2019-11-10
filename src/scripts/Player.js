@@ -28,8 +28,14 @@ export default class Player {
                 const tilePos = UIConfig.sceneGrid.pixelToTile(pointer.x, pointer.y, wall.sizeX, wall.sizeY)
                 if (tilePos[0] < 0) tilePos[0] = 0
                 if (tilePos[1] < 0) tilePos[1] = 0
-                if (tilePos[0] >= wall.sizeX) tilePos[0] = wall.sizeX - 1
-                if (tilePos[1] >= wall.sizeY) tilePos[1] = wall.sizeY - 1
+                if (tilePos[0] + this.currentlyDragging.furniture.sizeX >= wall.sizeX) tilePos[0] = wall.sizeX - this.currentlyDragging.furniture.sizeX 
+                if (tilePos[1] + this.currentlyDragging.furniture.sizeY >= wall.sizeY) tilePos[1] = wall.sizeY - this.currentlyDragging.furniture.sizeX 
+                // Cannot place => red tint
+                if (!house.getRoom(this.currentRoom).walls[this.currentWall].canAddFurniture(this.currentlyDragging.furniture, tilePos[0], tilePos[1])) {
+                    this.currentlyDragging.sprite.tint = 0xFF0000
+                } else {
+                    this.currentlyDragging.sprite.tint = 0xFFFFFF
+                }
                 const pixPos = UIConfig.sceneGrid.tileToPixel(tilePos[0], tilePos[1], wall.sizeX, wall.sizeY)
                 this.currentlyDragging.sprite.x = pixPos[0] + this.currentlyDragging.furniture.sizeX * UIConfig.sceneGrid.tileSize / 2;
                 this.currentlyDragging.sprite.y = pixPos[1] + (2 - this.currentlyDragging.furniture.sizeY) * UIConfig.sceneGrid.tileSize / 2;
