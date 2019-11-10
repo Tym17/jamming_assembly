@@ -9,7 +9,8 @@ const INV_HEIGHT = 97;
 const INV_X = OFFSET_INV_X + (INV_WIDTH / 2);
 const INV_Y = OFFSET_INV_Y + (INV_HEIGHT / 2);
 
-const NOTES_OFFSET_X = 42 + OFFSET_INV_X;
+const NOTES_INV_PADDING_X = 42;
+const NOTES_OFFSET_X = NOTES_INV_PADDING_X + OFFSET_INV_X;
 const NOTES_OFFSET_Y = 25 + OFFSET_INV_Y;
 const NOTES_SPACING = 23;
 const NOTE_SIZE = 45;
@@ -33,10 +34,12 @@ export default class NotesInventory {
         this.isBookUnlocked = false;
         this.halfDispenser = 0
 
+        /* Debug rect
         this.game.add.rectangle(INV_X, INV_Y,
             INV_WIDTH, INV_HEIGHT, 0xdadada);
-
-        this.overlay = this.game.add.rectangle(0, 0, 
+            */
+        
+        this.overlay = this.game.add.rectangle(0, 0,
             VIEW_WIDTH, VIEW_HEIGHT, 0, 0.7
         );
         this.overlay.setDisplayOrigin(0, 0);
@@ -57,6 +60,10 @@ export default class NotesInventory {
             this.game.load.image(`note_${i}_icon`, `assets/img/sprites/notes/papier_icone_${i + 1}.png`);
             this.game.load.image(`note_${i}_details`, `assets/img/sprites/notes/details_${i}.png`);
         }
+
+        this.game.load.image('book_icon', 'assets/img/sprites/notes/icone_livreok.png');
+        this.game.load.image('book_details', 'assets/img/sprites/notes/livre_demon.png');
+
         // TODO: load book sprite
     }
 
@@ -74,9 +81,9 @@ export default class NotesInventory {
     }
 
     unlockNote() {
-        if (this.noteLevel + 1 > NOTES_AMMOUNT) { 
+        if (this.noteLevel + 1 > NOTES_AMMOUNT) {
             console.error('Trying to unlock more notes than possible');
-            return; 
+            return;
         }
         let noteSprite = this.game.add.sprite(
             NOTES_OFFSET_X + (this.noteLevel * (NOTE_SIZE + NOTES_SPACING)), NOTES_OFFSET_Y,
@@ -105,15 +112,34 @@ export default class NotesInventory {
         this.detailedNoteSprite.on('pointerdown', this.unFocus);
     }
 
-    unlockBook()
-    {
+    openBook(that) {
+        return () => {
+            that.overlay.setVisible(true);
+            that.detailedNoteSprite = that.game.add.sprite(
+                VIEW_WIDTH / 2, VIEW_HEIGHT / 2,
+                'book_details'
+            );
+            that.detailedNoteSprite.setDepth(OVERLAY_DEPTH + 1);
+            that.detailedNoteSprite.setInteractive();
+            that.detailedNoteSprite.on('pointerdown', that.unFocus);
+        };
+    }
+
+    unlockBook() {
         if (this.isBookUnlocked) {
             console.error('Book is already unlocked');
-            return ;
+            return;
         }
-
+        let bookSprite = this.game.add.sprite(
+            NOTES_OFFSET_X + INV_WIDTH - NOTE_SIZE - (NOTES_INV_PADDING_X * 2),
+            NOTES_OFFSET_Y,
+            'book_icon'
+        );
+        bookSprite.setDisplayOrigin(0, 0);
+        bookSprite.setInteractive();
+        bookSprite.on('pointerdown', this.openBook(this));
+        this.noteSprites.push(bookSprite);
         this.isBookUnlocked = true;
-        // TODO add book sprite and make it interactive
     }
 
 }
