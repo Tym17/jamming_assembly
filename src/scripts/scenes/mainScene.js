@@ -11,9 +11,18 @@ export default class MainScene extends Phaser.Scene {
     super({ key: 'MainScene' })
   }
 
+  preload() {
+    this.load.image('main_bg', 'assets/img/sprites/menu/bg.png');
+    this.load.image('main_btn', 'assets/img/sprites/menu/btn.png');
+  }
+
   create() {
-    const playButton = this.add.text(this.cameras.main.centerX, this.cameras.main.centerY, 'Play', 
-    { fill: '#0F0', fontSize: 72});
+    let bg = this.add.sprite(0, 0, 'main_bg');
+    bg.setDisplayOrigin(0, 0);
+    bg.setScale(1920 / 1280, 1080 / 720);
+
+
+    const playButton = this.add.sprite(1920 * 0.65, 1080 * 0.7, 'main_btn');
     playButton.setInteractive();
 
 
@@ -22,74 +31,6 @@ export default class MainScene extends Phaser.Scene {
       console.log('Starting gamescene');
     });
 
-    /*
-    const furnace = new Furniture(this, {
-      name: 'furnace',
-      sizeX: 1,
-      sizeY: 2,
-      placeableOnWall: false,
-      images: {
-          inventory: '../phaser-logo.js',
-          very_bad: '../phaser-logo.js',
-          bad: '../phaser-logo.js',
-          neutral: '../phaser-logo.js',
-          good: '../phaser-logo.js'
-      }})
-  
-    const fridge = new Furniture(this, {
-      name: 'fridge',
-      sizeX: 2,
-      sizeY: 3,
-      placeableOnWall: false,
-      images: {
-          inventory: '../phaser-logo.js',
-          very_bad: '../phaser-logo.js',
-          bad: '../phaser-logo.js',
-          neutral: '../phaser-logo.js',
-          good: '../phaser-logo.js'
-      }})
-
-    const allFurnitures = {furnace, fridge}
-  
-
-    let house = new House(this, allFurnitures)
-    let player = new Player(this, allFurnitures, house)
-
-    console.log('Energy: ', player.energy)
-    console.log('Current Room: ', player.currentRoom)
-    console.log('Moving to the kitchen: ', player.move('kitchen'))
-    console.log('Energy: ', player.energy)
-    console.log('Current Room: ', player.currentRoom)
-    console.log('Moving to the living room: ', player.move('living_room'))
-    console.log('Energy: ', player.energy)
-    console.log('Current Room: ', player.currentRoom)
-    console.log('Current Wall: ', player.currentWall)
-    console.log('Rotating right')
-    player.rotateRight()
-    console.log('Energy: ', player.energy)
-    console.log('Current Room: ', player.currentRoom)
-    console.log('Current Wall: ', player.currentWall)
-    console.log('Placing the furnace', player.placeFurniture(furnace, 2, 1))
-    console.log('Rotating left')
-    player.rotateLeft()
-    console.log('Energy: ', player.energy)
-    console.log('Current Room: ', player.currentRoom)
-    console.log('Current Wall: ', player.currentWall)
-    console.log('Energy: ', player.energy)
-    console.log('Correct: ', house.getRoom(player.currentRoom).getAllCorrectFurnitures())
-    console.log('Missing: ', house.getRoom(player.currentRoom).getAllMissingFurnitures())
-    console.log('Misplaced: ', house.getRoom(player.currentRoom).getAllMisplacedFurnitures())
-    console.log('Rotating right')
-    player.rotateRight()
-    console.log('Current Room: ', player.currentRoom)
-    console.log('Current Wall: ', player.currentWall)
-    console.log('Removing the furnace', player.takeFurniture(furnace))
-    console.log('Correct: ', house.getRoom(player.currentRoom).getAllCorrectFurnitures())
-    console.log('Missing: ', house.getRoom(player.currentRoom).getAllMissingFurnitures())
-    console.log('Misplaced: ', house.getRoom(player.currentRoom).getAllMisplacedFurnitures())
-    player.rotateRight()
-    player.sleep()
-    */
   }
 
   update() {
