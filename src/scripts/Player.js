@@ -19,6 +19,7 @@ export default class Player {
         this.inventoryPage = 0
         this.notes = new NotesInventory(game);
         this.currentlyDragging = undefined
+        this.game.noteManager = this.notes
 
         
         game.input.on('pointermove', pointer => {
@@ -64,14 +65,6 @@ export default class Player {
     create() {
         this._refreshInventory()
         this._enterWall()
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
-        this.notes.unlockNote();
     }
 
     addToInventory (furniture) {
@@ -196,18 +189,16 @@ export default class Player {
             this.energy -= this.energyUsedByWalking
             this._exitWall()
             this.currentRoom = to
+            this.house.getRoom(this.currentRoom).checkNotes()
             this.currentWall = wall
             this._enterWall()
             const roomPhase = this.house.getRoom(this.currentRoom).phase
             if (roomPhase == 'good') {
                 this.takeDamage(-5)
             }
-            if (roomPhase == 'bad' || roomPhase == 'very_bad') {
-                this.takeDamage(5)
+            if (roomPhase == 'bad') {
+                this.takeDamage(10)
                 this.energy -= this.energyUsedByBadRoom
-                if (roomPhase == 'very_bad') {
-                    this.takeDamage(5)
-                }
             }
             this.checkEndOfDay()
             console.log('move success')
@@ -244,7 +235,7 @@ export default class Player {
     }
 
     checkEndOfDay () {
-        if (this.energy <= 0) { // TODO: OR TIMEOUT
+        if (this.energy <= 0) {
             this.sleep()
         }
     }
@@ -253,6 +244,7 @@ export default class Player {
         console.log('Sleeping')
         this.house.performMutations()
         this.energy = this.energyPerDay
+        this.house[this.currentRoom].checkNotes()
     }
 
     takeDamage (damage) {
@@ -262,6 +254,6 @@ export default class Player {
     }
 
     gameOver () {
-        console.error('GAME OVER') // TODO
+        console.error('GAME OVER')
     }
 }

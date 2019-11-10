@@ -2,6 +2,7 @@ import Furniture from "./Furniture"
 
 export default class Room {
     constructor (game, allFurnitures, walls) {
+        this.game = game
         this.walls = walls
         this.phase = 'neutral'
         this.allFurnitures = allFurnitures
@@ -10,7 +11,7 @@ export default class Room {
     }
 
     static phases () {
-        return ['very_bad', 'bad', 'neutral', 'good']
+        return ['bad', 'neutral', 'good']
     }
 
     static validatePhaseName (phase) {
@@ -53,10 +54,19 @@ export default class Room {
         })
 
         this.getAllCorrectFurnitures()
-        .filter(_ => Math.random() <= Furniture.mutationProbability())
         .forEach(name => {
             console.log('Improving furniture', name)
             this.allFurnitures[name].improve()
+        })
+    }
+
+    checkNotes () {
+        this.getAllCorrectFurnitures()
+        .map(fName => this.allFurnitures[fName])
+        .filter(f => !f.checkedPostIt)
+        .forEach(f => {
+            this.game.noteManager.halfDispense()
+            f.checkedPostIt = true
         })
     }
 

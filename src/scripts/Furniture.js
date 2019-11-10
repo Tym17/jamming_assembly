@@ -6,16 +6,16 @@ export default class Furniture {
         this.placeableOnWall = placeableOnWall
         this.images = images
         this.phase = 'neutral'
+        this.checkedPostIt = false
 
         game.load.image(`${name}_inventory`, images['inventory'])
-        game.load.image(`${name}_phase_very_bad`, images['very_bad'])
         game.load.image(`${name}_phase_bad`, images['bad'])
         game.load.image(`${name}_phase_neutral`, images['neutral'])
         game.load.image(`${name}_phase_good`, images['good'])
     }
 
     static phases () {
-        return ['very_bad', 'bad', 'neutral', 'good']
+        return ['bad', 'neutral', 'good']
     }
 
     static validatePhaseName (phase) {
