@@ -31,7 +31,7 @@ export default class House {
             kitchen: {room: new Room(game, allFurnitures, [
                 new Wall(game, allFurnitures, {
                     sizeX: 9, sizeY: 8,
-                    correctFurniturePositions: {},
+                    correctFurniturePositions: {'cuisine_frigo': [1, 1], 'cuisine_evier': [4, 1]},
                     backgrounds: {'good': 'kitchen_0_neutral', 'neutral': 'kitchen_0_neutral', 'bad': 'kitchen_0_neutral', 'very_bad': 'kitchen_0_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 9, sizeY: 8,
@@ -45,7 +45,7 @@ export default class House {
             bathroom: {room: new Room(game, allFurnitures, [
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
-                    correctFurniturePositions: {},
+                    correctFurniturePositions: {'sdb_baignoire': [1, 1], 'sdb_miroir': [7, 7], 'sdb_toilettes': [7, 1]},
                     doors: [{x: 5.5, y: -3, onClick: (() => { this.player.move('living_room', 2) }), texture: 'arrow_down', tooltip: 'Sortir'}],
                     backgrounds: {'good': 'bathroom_0_neutral', 'neutral': 'bathroom_0_neutral', 'bad': 'bathroom_0_neutral', 'very_bad': 'bathroom_0_neutral'}}),
                 ]),

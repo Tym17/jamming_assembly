@@ -56,7 +56,6 @@ export default class GameScene extends Phaser.Scene {
             good: baseFurnitureName + '_neutral.png',
             neutral: baseFurnitureName + '_neutral.png',
             bad: baseFurnitureName + '_bad.png',
-            very_bad: baseFurnitureName + '_bad.png',
             inventory: baseInventoryName + '_neutral.png'
         }
     }
@@ -70,7 +69,6 @@ export default class GameScene extends Phaser.Scene {
                 neutral: 'assets/img/sprites/skorjund.png',
                 good: 'assets/img/sprites/skorjund.png',
                 bad: 'assets/img/sprites/skorjund.png',
-                very_bad: 'assets/img/sprites/skorjund.png',
                 inventory: 'assets/img/sprites/skorjund.png'
             }
         });
@@ -82,7 +80,6 @@ export default class GameScene extends Phaser.Scene {
                 neutral: 'assets/img/sprites/skorjund_fat.png',
                 good: 'assets/img/sprites/skorjund_fat.png',
                 bad: 'assets/img/sprites/skorjund_fat.png',
-                very_bad: 'assets/img/sprites/skorjund_fat.png',
                 inventory: 'assets/img/sprites/skorjund.png'
             }
         });
@@ -114,7 +111,7 @@ export default class GameScene extends Phaser.Scene {
             sdb_miroir: {sizeX: 2, sizeY: 2, placeableOnWall: true},
             sdb_toilettes: {sizeX: 2, sizeY: 3, placeableOnWall: false}
         }
-        const furnitures = Object.entries(furnituresData).map(([furniture, info]) => {
+        this.furnitures = Object.entries(furnituresData).map(([furniture, info]) => {
             return this.addfurniture({
                 name: furniture,
                 sizeX: info.sizeX, sizeY: info.sizeY,
@@ -152,7 +149,7 @@ export default class GameScene extends Phaser.Scene {
         this.house = new House(this, this.furnitureList)
         this.player = new Player(this, this.furnitureList, this.house);
 
-        furnitures.map(f => {
+        this.furnitures.map(f => {
             this.player.addToInventory(f)
         })
     }
@@ -188,7 +185,18 @@ export default class GameScene extends Phaser.Scene {
             console.log(event.position)
             UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)
         });
-/*
+
+        Object.entries({'sdb_baignoire': [1, 1], 'sdb_miroir': [7, 7], 'sdb_toilettes': [7, 1]})
+        .forEach(([key, value]) => {
+            console.log(this.house.getRoom('bathroom').walls[0].tryToAddFurniture(this.furnitureList[key], value[0], value[1]))
+        })
+
+        Object.entries({'cuisine_frigo': [1, 1], 'cuisine_evier': [4, 1]})
+        .forEach(([key, value]) => {
+            console.log(this.house.getRoom('kitchen').walls[0].tryToAddFurniture(this.furnitureList[key], value[0], value[1]))
+        })
+
+        /*
         this.house._upgradeLvL1()
         this.house._upgradeLvL2()
         this.house._upgradeLvL3()

@@ -32,6 +32,7 @@ export default class NotesInventory {
         this.noteSprites = [];
         this.detailedNoteSprite = undefined;
         this.isBookUnlocked = false;
+        this.halfDispenser = 0
 
         /* Debug rect
         this.game.add.rectangle(INV_X, INV_Y,
@@ -66,6 +67,19 @@ export default class NotesInventory {
         // TODO: load book sprite
     }
 
+    halfDispense () {
+        ++this.halfDispenser
+        if (this.halfDispenser % 2) {
+            try {
+                this.unlockNote()
+            } catch {}
+        }
+    }
+
+    notesAvailable () {
+        return 8 - this.noteLevel
+    }
+
     unlockNote() {
         if (this.noteLevel + 1 > NOTES_AMMOUNT) {
             console.error('Trying to unlock more notes than possible');
@@ -83,6 +97,7 @@ export default class NotesInventory {
         });
 
         this.noteSprites.push(noteSprite);
+        this.enlargeNote(this.noteLevel)
         this.noteLevel++;
     }
 

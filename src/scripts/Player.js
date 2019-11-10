@@ -23,6 +23,8 @@ export default class Player {
         this.inventoryPage = 0
         this.notes = new NotesInventory(game);
         this.currentlyDragging = undefined
+        this.game.noteManager = this.notes
+
         this.hud = new Indicators(game);
         this.timeInDayInMs = 0;
 
@@ -199,7 +201,7 @@ export default class Player {
             this.takeDamage(5)
             this.energy -= this.energyUsedByBadRoom
             if (roomPhase == 'very_bad') {
-                this.takeDamage(5)
+                this.takeDamage(10)
             }
         }
     }
@@ -210,6 +212,7 @@ export default class Player {
             this.energy -= this.energyUsedByWalking
             this._exitWall()
             this.currentRoom = to
+            this.house.getRoom(this.currentRoom).checkNotes()
             this.currentWall = wall
             this._enterWall()
             this.checkHealth();
@@ -262,6 +265,7 @@ export default class Player {
         this.house.performMutations()
         this.checkHealth();
         this.energy = this.energyPerDay
+        this.house[this.currentRoom].checkNotes()
         this.hud.updateEye(this.energy, this.mentalHealth)
         this.hud.nightTime(true);
         this.timeInDayInMs = 0;
