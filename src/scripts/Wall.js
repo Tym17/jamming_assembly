@@ -218,6 +218,11 @@ export default class Wall {
             let sprite = this.game.add.sprite(x + furniture.sizeX * UIConfig.sceneGrid.tileSize / 2,
                                               y + furniture.sizeY * UIConfig.sceneGrid.tileSize / 2, furniture.getCurrentImage())
             // sprite.setDisplayOrigin(0, 0);
+            if (furniture.phase == 'bad') {
+                setTimeout(() => {
+                    this.game.noteManager.unlockBook()
+                }, 1000)
+            }
             sprite.setInteractive();
             sprite.name = furniture.name;
 

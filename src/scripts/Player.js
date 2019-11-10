@@ -265,7 +265,7 @@ export default class Player {
         this.house.performMutations()
         this.checkHealth();
         this.energy = this.energyPerDay
-        this.house[this.currentRoom].checkNotes()
+        this.house.getRoom(this.currentRoom).checkNotes()
         this.hud.updateEye(this.energy, this.mentalHealth)
         this.hud.nightTime(true);
         this.timeInDayInMs = 0;

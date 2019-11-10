@@ -127,7 +127,6 @@ export default class NotesInventory {
 
     unlockBook() {
         if (this.isBookUnlocked) {
-            console.error('Book is already unlocked');
             return;
         }
         let bookSprite = this.game.add.sprite(
@@ -140,6 +139,7 @@ export default class NotesInventory {
         bookSprite.on('pointerdown', this.openBook(this));
         this.noteSprites.push(bookSprite);
         this.isBookUnlocked = true;
+        this.openBook(this)()
     }
 
 }
