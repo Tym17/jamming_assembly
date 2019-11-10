@@ -41,5 +41,9 @@ export default {
                           ~~((y - inventoryGridPositionBottomLeft(maxX, maxY)[1]) / INVENTORY_GRID_TILESIZE)]
             return tile
         }
+    },
+    doors: {
+        size: [3, 5],
+        offset: [1.5, 2]
     }
 }

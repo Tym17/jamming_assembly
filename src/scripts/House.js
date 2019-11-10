@@ -9,12 +9,12 @@ export default class House {
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 6, y: 1, onClick: (() => { this.player.move('kitchen') })}],
+                    doors: [{x: 2, y: 1, onClick: (() => { this.player.move('bathroom') }), invisible: true}],
                     backgrounds: {'good': 'living_room_0_neutral', 'neutral': 'living_room_0_neutral', 'bad': 'living_room_0_neutral', 'very_bad': 'living_room_0_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 0, y: 0, onClick: (() => { this.player.move('bathroom') })}],
+                    doors: [{x: 8, y: 1, onClick: (() => { this.player.move('kitchen') }), invisible: true}],
                     backgrounds: {'good': 'living_room_1_neutral', 'neutral': 'living_room_1_neutral', 'bad': 'living_room_1_neutral', 'very_bad': 'living_room_1_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
@@ -32,11 +32,11 @@ export default class House {
                 new Wall(game, allFurnitures, {
                     sizeX: 9, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 0, y: 0, onClick: (() => { this.player.move('living_room') })}],
                     backgrounds: {'good': 'kitchen_0_neutral', 'neutral': 'kitchen_0_neutral', 'bad': 'kitchen_0_neutral', 'very_bad': 'kitchen_0_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 9, sizeY: 8,
                     correctFurniturePositions: {},
+                    doors: [{x: 3, y: 1, onClick: (() => { this.player.move('living_room', 3) }), invisible: true}],
                     backgrounds: {'good': 'kitchen_1_neutral', 'neutral': 'kitchen_1_neutral', 'bad': 'kitchen_1_neutral', 'very_bad': 'kitchen_1_neutral'}}),
                 ]),
                 unlockAtLevel: 0,
@@ -44,7 +44,7 @@ export default class House {
 
             bathroom: {room: new Room(game, allFurnitures, [
                 new Wall(game, allFurnitures, {
-                    sizeX: 9, sizeY: 8,
+                    sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
                     backgrounds: {'good': 'bathroom_0_neutral', 'neutral': 'bathroom_0_neutral', 'bad': 'bathroom_0_neutral', 'very_bad': 'bathroom_0_neutral'}}),
                 ]),
@@ -119,6 +119,39 @@ export default class House {
         return this.rooms[name].room
     }
 
+    _upgradeLvL1 () {
+        this.level = 1
+        this.rooms['living_room'].room.walls[0].doors.push({
+            x: 8, y: 1, onClick: (() => { this.player.move('bedroom') })
+        })
+        this.rooms['bedroom'].room.walls[1].doors.push({
+            x: 2.75, y: 0.95, onClick: (() => { this.player.move('living_room', 2) })
+        })
+        this.player._exitWall()
+        this.player._enterWall()
+    }
+
+    _upgradeLvL2 () {
+        this.level = 2
+        this.rooms['living_room'].room.walls[3].doors.push({
+            x: 3, y: 1, onClick: (() => { this.player.move('library') })
+        })
+        this.rooms['library'].room.walls[1].doors.push({
+            x: 7, y: 1, onClick: (() => { this.player.move('living_room', 1) })
+        })
+        this.player._exitWall()
+        this.player._enterWall()
+    }
+
+    _upgradeLvL3 () {
+        this.level = 3
+        this.rooms['library'].room.walls[0].doors.push({
+            x: 8, y: 1, onClick: (() => { this.player.move('garden') }), invisible: true
+        })
+        this.player._exitWall()
+        this.player._enterWall()
+    }
+
     performMutations () {
         Object.values(this.rooms)
         .map(roomDict => roomDict.room)
@@ -127,38 +160,17 @@ export default class House {
         switch (this.level) {
             case 0:
                 if (this.rooms['living_room'].room.validated) {
-                    this.level = 1
-                    this.rooms['living_room'].room.walls[2].doors.push({
-                        x: 0, y: 0, onClick: (() => { this.player.move('bedroom') })
-                    })
-                    this.rooms['bedroom'].room.walls[0].doors.push({
-                        x: 0, y: 0, onClick: (() => { this.player.move('living_room') })
-                    })
-                    this.player._exitWall()
-                    this.player._enterWall()
+                    this._upgradeLvL1()
                 }
             break
             case 1:
                 if (this.rooms['bedroom'].room.validated) {
-                    this.level = 2
-                    this.rooms['living_room'].room.walls[3].doors.push({
-                        x: 0, y: 0, onClick: (() => { this.player.move('library') })
-                    })
-                    this.rooms['library'].room.walls[0].doors.push({
-                        x: 0, y: 0, onClick: (() => { this.player.move('living_room') })
-                    })
-                    this.player._exitWall()
-                    this.player._enterWall()
+                    this._upgradeLvL2()
                 }
             break
             case 2:
                 if (this.rooms['library'].room.validated) {
-                    this.level = 3
-                    this.rooms['library'].room.walls[0].doors.push({
-                        x: 0, y: 0, onClick: (() => { this.player.move('garden') })
-                    })
-                    this.player._exitWall()
-                    this.player._enterWall()
+                    this._upgradeLvL3()
                 }
             break
         }

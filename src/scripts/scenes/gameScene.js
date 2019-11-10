@@ -62,7 +62,6 @@ export default class GameScene extends Phaser.Scene {
     }
 
     preload() {
-        // TODO CREATE  EVERY FURNITURE HERE
         this.addfurniture({
             name: 'tabourey',
             sizeX: 1, sizeY: 1,
@@ -128,6 +127,7 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('arrow_left', 'assets/img/sprites/arrow_left.png')
 
         this.load.image('door', 'assets/img/sprites/door.png')
+        this.load.image('invisible_door', 'assets/img/sprites/invisible_door.png')
 
         this.load.image('living_room_0_neutral', 'assets/img/sprites/rooms/salon_face.png')
         this.load.image('living_room_1_neutral', 'assets/img/sprites/rooms/salon_gauche.png')
@@ -145,17 +145,10 @@ export default class GameScene extends Phaser.Scene {
         this.load.image('kitchen_0_neutral', 'assets/img/sprites/rooms/cuisine_face.png')
         this.load.image('kitchen_1_neutral', 'assets/img/sprites/rooms/cuisine_porte.png')
 
-
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
         
         this.house = new House(this, this.furnitureList)
-        this.house.rooms.living_room.room.walls[1].tryToAddFurniture(this.furnitureList['tabourey'], 2, 5)
-        
-        this.house.rooms.living_room.room.walls[2].tryToAddFurniture(this.furnitureList['fatbourey'], 4, 4)
-        
-        this.house.rooms.living_room.room.walls[3].tryToAddFurniture(this.furnitureList['fatbourey'], 8, 2)
-        
         this.player = new Player(this, this.furnitureList, this.house);
 
         furnitures.map(f => {
@@ -196,12 +189,11 @@ export default class GameScene extends Phaser.Scene {
             console.log(event.position)
             UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)
         });
-
-        setTimeout(() => {
-            console.log('plop')
-            this.house.getRoom('living_room').validated = true
-            this.house.performMutations()
-        }, 10000)
+/*
+        this.house._upgradeLvL1()
+        this.house._upgradeLvL2()
+        this.house._upgradeLvL3()
+*/
     }
 
     update() {

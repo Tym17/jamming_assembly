@@ -100,7 +100,6 @@ export default class Player {
         .slice(this.inventoryPage * 6, (this.inventoryPage + 1) * 6)
         .forEach((elem, idx) => {
             const pixelPos = UIConfig.inventoryGrid.tileToPixel(idx % 2, ~~(idx / 2), 2, 3)
-            console.log('Adding sprite at position', pixelPos, '(tile=', idx % 2, ',', idx / 2, ')')
             elem.sprite = this.game.add.sprite(pixelPos[0], pixelPos[1], elem.furniture.getInventoryImage())
             elem.sprite.setInteractive();
             elem.sprite.on('pointerdown', (event) => {
@@ -191,13 +190,13 @@ export default class Player {
         this.house.getRoom(this.currentRoom).walls[this.currentWall].exit()
     }
 
-    move (to) {
+    move (to, wall=0) {
         console.log('trying to move')
         if (this.house.canTransition(this.currentRoom, to)) {
             this.energy -= this.energyUsedByWalking
             this._exitWall()
             this.currentRoom = to
-            this.currentWall = 0
+            this.currentWall = wall
             this._enterWall()
             const roomPhase = this.house.getRoom(this.currentRoom).phase
             if (roomPhase == 'good') {
@@ -233,14 +232,14 @@ export default class Player {
     rotateRight () {
         console.log('Rotating right')
         this._exitWall()
-        this.currentWall = this.house.getRoom(this.currentRoom).nextWall(this.currentWall)
+        this.currentWall = this.house.getRoom(this.currentRoom).previousWall(this.currentWall)
         this._enterWall()
     }
 
     rotateLeft () {
         console.log('Rotating left')
         this._exitWall()
-        this.currentWall = this.house.getRoom(this.currentRoom).previousWall(this.currentWall)
+        this.currentWall = this.house.getRoom(this.currentRoom).nextWall(this.currentWall)
         this._enterWall()
     }
 
