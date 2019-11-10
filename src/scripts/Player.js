@@ -3,7 +3,7 @@ import NotesInventory from './notesInventory'
 import UIConfig from "./UIConfig"
 import Indicators from "./indicators"
 
-const DAY_LENGTH = 0.15 * 60 * 1000;
+const DAY_LENGTH = 1.5 * 60 * 1000;
 const DAY_PART = DAY_LENGTH / 3;
 
 export default class Player {
