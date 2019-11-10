@@ -12,7 +12,7 @@ export default class Player {
         this.endGame = false;
         this.house = house
         this.house.setPlayer(this)
-        this.mentalHealth = 10
+        this.mentalHealth = 100
         this.energyPerDay = 3
         this.energy = this.energyPerDay
         this.energyUsedByWalking = 0.5
