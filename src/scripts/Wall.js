@@ -164,7 +164,8 @@ export default class Wall {
         this.getFurnitures().forEach(furniture => {
             console.log('Adding sprite', furniture, 'at pos', UIConfig.sceneGrid.tileToPixel(...this.findFurniturePosition(furniture)))
             let [x, y] = UIConfig.sceneGrid.tileToPixel(this.findFurniturePosition(furniture)[0],
-                                                        this.findFurniturePosition(furniture)[1] + furniture.sizeY - 1)
+                                                        this.findFurniturePosition(furniture)[1] + furniture.sizeY - 1,
+                                                        this.sizeX, this.sizeY)
             let sprite = this.game.add.sprite(x + furniture.sizeX * UIConfig.sceneGrid.tileSize / 2,
                                               y + furniture.sizeY * UIConfig.sceneGrid.tileSize / 2, furniture.getCurrentImage())
             // sprite.setDisplayOrigin(0, 0);

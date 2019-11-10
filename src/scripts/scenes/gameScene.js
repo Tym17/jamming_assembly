@@ -104,17 +104,6 @@ export default class GameScene extends Phaser.Scene {
                 UIConfig.inventoryGrid.tileSize, UIConfig.inventoryGrid.tileSize,
                 0xcacaca, 1, 0x0000FF);
 
-        console.log(UIConfig.sceneGrid.positionBottomLeft(13, 8)[0],
-        UIConfig.sceneGrid.positionBottomLeft(13, 8)[1] - 8 * UIConfig.sceneGrid.tileSize,
-        UIConfig.sceneGrid.size(13, 8)[0], UIConfig.sceneGrid.size(13, 8)[1],
-        UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize,
-        0xcacaca, 1, 0x0000FF)
-
-        // this.add.grid(INV_X, INV_Y,
-        //     INV_WIDTH, INV_HEIGHT,
-        //     CELL_SIZE * 2, CELL_SIZE * 2,
-        //     0xcacaca, 1, 0xFF0000);
-
         this.house = new House(this, this.furnitureList)
 
         // this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['tabourey'], 0, 0)
