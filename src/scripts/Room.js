@@ -84,7 +84,6 @@ export default class Room {
         const errors = this.getAllMisplacedFurnitures().length + this.getAllMissingFurnitures().length
         const worsenProbability = errors / theoreticalNbFurnitures * 0.5
         if (Math.random() <= worsenProbability) {
-            console.info('auto worsen room', this.walls[0]);
             this.worsen()
         }
         if (Object.keys(this.getAllCorrectFurnitures()).length >= theoreticalNbFurnitures) {

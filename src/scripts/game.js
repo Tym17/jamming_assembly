@@ -5,6 +5,7 @@ import MainScene from './scenes/mainScene'
 import GameScene from './scenes/gameScene'
 import OverScene from './scenes/overScene'
 import PreloadScene from './scenes/preloadScene'
+import GardenScene from './scenes/gardenScene'
 
 const DEFAULT_WIDTH = 1920
 const DEFAULT_HEIGHT = 1080
@@ -18,7 +19,7 @@ const config = {
     width: DEFAULT_WIDTH,
     height: DEFAULT_HEIGHT
   },
-  scene: [PreloadScene, MainScene, GameScene, OverScene],
+  scene: [PreloadScene, MainScene, GameScene, OverScene, GardenScene],
   physics: {
     default: 'arcade',
     arcade: {

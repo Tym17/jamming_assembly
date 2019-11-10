@@ -147,7 +147,7 @@ export default class House {
     _upgradeLvL3 () {
         this.level = 3
         this.rooms['library'].room.walls[0].doors.push({
-            x: 8, y: 1, onClick: (() => { this.player.move('garden') }), texture: 'invisible_door'
+            x: 8, y: 1, onClick: (() => { this.game.scene.start('GardenScene'); }), texture: 'invisible_door'
         })
         this.player._exitWall()
         this.player._enterWall()
