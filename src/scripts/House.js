@@ -9,7 +9,7 @@ export default class House {
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,
                     correctFurniturePositions: {},
-                    doors: [{x: 0, y: 0, onClick: (() => { this.player.move('kitchen') })}],
+                    doors: [{x: 6, y: 1, onClick: (() => { this.player.move('kitchen') })}],
                     backgrounds: {'good': 'living_room_0_neutral', 'neutral': 'living_room_0_neutral', 'bad': 'living_room_0_neutral', 'very_bad': 'living_room_0_neutral'}}),
                 new Wall(game, allFurnitures, {
                     sizeX: 11, sizeY: 8,

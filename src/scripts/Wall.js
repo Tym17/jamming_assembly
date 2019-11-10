@@ -226,7 +226,7 @@ export default class Wall {
             door.sprite = this.game.add.sprite(UIConfig.sceneGrid.tileToPixel(door.x, door.x)[0],
                                                UIConfig.sceneGrid.tileToPixel(door.x, door.x)[1],
                                                'door')
-            door.sprite.setDisplayOrigin(-UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize * 4)
+            door.sprite.setDisplayOrigin(0, -UIConfig.sceneGrid.tileSize / 2)
             door.sprite.setInteractive()
             door.sprite.on('pointerdown', (event) => {
                 if (door.onClick)
