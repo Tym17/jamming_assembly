@@ -150,22 +150,6 @@ export default class GameScene extends Phaser.Scene {
             console.log(event.position)
             UIConfig.sceneGrid.pixelToTile(event.position.x, event.position.y, 13, 8)
         });
-
-        Object.entries({'sdb_baignoire': [1, 1], 'sdb_miroir': [7, 7], 'sdb_toilettes': [7, 1]})
-        .forEach(([key, value]) => {
-            console.log(this.house.getRoom('bathroom').walls[0].tryToAddFurniture(this.furnitureList[key], value[0], value[1]))
-        })
-
-        Object.entries({'cuisine_frigo': [1, 1], 'cuisine_evier': [4, 1]})
-        .forEach(([key, value]) => {
-            console.log(this.house.getRoom('kitchen').walls[0].tryToAddFurniture(this.furnitureList[key], value[0], value[1]))
-        })
-
-        /*
-        this.house._upgradeLvL1()
-        this.house._upgradeLvL2()
-        this.house._upgradeLvL3()
-*/
     }
 
     update(time, delta) {
