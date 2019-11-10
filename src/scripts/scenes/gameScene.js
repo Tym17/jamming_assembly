@@ -123,8 +123,20 @@ export default class GameScene extends Phaser.Scene {
 
         console.log('initial inv', this.inventory);
         console.log('furniture lib', this.furnitureList);
+        
+        this.house = new House(this, this.furnitureList)
+        this.house.rooms.living_room.room.walls[1].tryToAddFurniture(this.furnitureList['tabourey'], 2, 5)
+        
+        this.house.rooms.living_room.room.walls[2].tryToAddFurniture(this.furnitureList['fatbourey'], 4, 4)
+        
+        this.house.rooms.living_room.room.walls[3].tryToAddFurniture(this.furnitureList['fatbourey'], 8, 2)
+        
+        this.player = new Player(this, this.furnitureList, this.house);
+        
+        this.player.addToInventory(this.furnitureList['tabourey'])
+        this.player.addToInventory(this.furnitureList['fatbourey'])
     }
-
+    
     /**
      * 
      * @param {x, y} pos 
@@ -132,41 +144,26 @@ export default class GameScene extends Phaser.Scene {
      */
     isInArea(pos, area) {
         return ((pos.x >= area.pos.x && pos.x <= area.pos.x + area.width)
-            && (pos.y >= area.pos.y && pos.y <= area.pos.y + area.heigth));
+        && (pos.y >= area.pos.y && pos.y <= area.pos.y + area.heigth));
     }
-
-    create() {
+    
+    create() {        
         this.debugGrid = this.add.grid(
             UIConfig.sceneGrid.positionCenter[0],
             UIConfig.sceneGrid.positionCenter[1],
             UIConfig.sceneGrid.size(13, 8)[0], UIConfig.sceneGrid.size(13, 8)[1],
             UIConfig.sceneGrid.tileSize, UIConfig.sceneGrid.tileSize,
             0xcacaca, 1, 0x0000FF);
+            
+        this.add.grid(
+            UIConfig.inventoryGrid.positionCenter[0],
+            UIConfig.inventoryGrid.positionCenter[1],
+            UIConfig.inventoryGrid.size(2, 3)[0], UIConfig.inventoryGrid.size(2, 3)[1],
+            UIConfig.inventoryGrid.tileSize, UIConfig.inventoryGrid.tileSize,
+            0xcacaca, 1, 0x0000FF);
+                
+        this.player.create();
 
-            this.add.grid(
-                UIConfig.inventoryGrid.positionCenter[0],
-                UIConfig.inventoryGrid.positionCenter[1],
-                UIConfig.inventoryGrid.size(2, 3)[0], UIConfig.inventoryGrid.size(2, 3)[1],
-                UIConfig.inventoryGrid.tileSize, UIConfig.inventoryGrid.tileSize,
-                0xcacaca, 1, 0x0000FF);
-
-        this.house = new House(this, this.furnitureList)
-
-        // this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['tabourey'], 0, 0)
-        // this.house.rooms.living_room.room.walls[0].tryToAddFurniture(this.furnitureList['fatbourey'], 3, 1)
-
-        this.house.rooms.living_room.room.walls[1].tryToAddFurniture(this.furnitureList['tabourey'], 2, 5)
-
-        this.house.rooms.living_room.room.walls[2].tryToAddFurniture(this.furnitureList['fatbourey'], 4, 4)
-
-        this.house.rooms.living_room.room.walls[3].tryToAddFurniture(this.furnitureList['fatbourey'], 8, 2)
-
-        this.player = new Player(this, this.furnitureList, this.house);
-
-        this.player.addToInventory(this.furnitureList['tabourey'])
-        this.player.addToInventory(this.furnitureList['fatbourey'])
-        this.player.addToInventory(this.furnitureList['desk'])
-        
         console.log('Gamescene started');
 
         this.input.on('pointerdown', event => {

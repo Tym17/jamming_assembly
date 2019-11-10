@@ -1,4 +1,5 @@
 import House from "./House"
+import NotesInventory from './notesInventory'
 import UIConfig from "./UIConfig"
 
 export default class Player {
@@ -16,11 +17,8 @@ export default class Player {
         this.currentWall = 0
         this.inventory = []
         this.inventoryPage = 0
-
-        this.currentlyDragging = undefined /*{
-            sprite: game.add.sprite(0, 0, 'fatbourey_phase_neutral'),
-            furniture: allFurnitures.fatbourey
-        }*/
+        this.notes = new NotesInventory(game);
+        this.currentlyDragging = undefined
 
         
         game.input.on('pointermove', pointer => {
@@ -61,9 +59,19 @@ export default class Player {
                 this._addCurrentlyDraggingToInventory()
             }
         });
-        
+    }
+
+    create() {
         this._refreshInventory()
         this._enterWall()
+        this.notes.unlockNote();
+        this.notes.unlockNote();
+        this.notes.unlockNote();
+        this.notes.unlockNote();
+        this.notes.unlockNote();
+        this.notes.unlockNote();
+        this.notes.unlockNote();
+        this.notes.unlockNote();
     }
 
     addToInventory (furniture) {
