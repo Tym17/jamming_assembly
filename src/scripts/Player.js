@@ -199,11 +199,8 @@ export default class Player {
             this.takeDamage(-5)
         }
         if (roomPhase == 'bad' || roomPhase == 'very_bad') {
-            this.takeDamage(5)
+            this.takeDamage(20)
             this.energy -= this.energyUsedByBadRoom
-            if (roomPhase == 'very_bad') {
-                this.takeDamage(10)
-            }
         }
     }
 
